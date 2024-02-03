@@ -31,7 +31,7 @@ def registrierung():
         if passwort != passwort_repeat:
             return render_template('registrierung.html', error='Passwörter stimmen nicht überein', vorname=vorname, nachname=nachname
                                     ,email=email, bankinstitut=bankinstitut, password=passwort, passwort_repeat=passwort_repeat)
-
+    return render_template('registrierung.html')
 
 if __name__ == '__main__':
     app.run()
