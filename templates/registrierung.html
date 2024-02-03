@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrerung</title>
+</head>
+<body>
+<form action="/registrierung" method="post">
+
+                <label for="vorname">Vorname:</label>
+                <input type="text" id="vorname" name="vorname" value="{{ vorname }}" placeholder="Vorname" required>
+
+                <label for="nachname">Nachname:</label>
+                <input type="text" id="nachname" name="nachname" value="{{ nachname }}" placeholder="Nachname" required>
+
+                <label for="email">E-Mail:</label>
+                <input type="email" id="email" name="email" value="{{ email }}" placeholder="E-Mail" required>
+
+                <label for="alter">Alter:</label>
+                <input type="number" id="alter" name="alter" min="0" value="{{ alter }}" placeholder="Alter" required>
+
+                <label for="bankinstitut">Bankinstitut:</label>
+                <input type="text" id="bankinstitut" name="bankinstitut" value="{{ bankinstitut }}" placeholder="bankinstitut" required>
+
+                <label for="passwort">Passwort:</label>
+                <input type="password" id="passwort" name="passwort" placeholder="Passwort" required>
+
+                <label for="passwort_repeat">Passwort Wiederholen:</label>
+                <input type="password" id="passwort_repeat" name="passwort_repeat" placeholder="Passwort Wiederholen" required>
+
+            <button type="submit">Registrieren</button>
+        </form>
+</body>
+</html>
