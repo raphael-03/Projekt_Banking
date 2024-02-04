@@ -9,6 +9,25 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
+cur.execute("DROP TABLE IF EXISTS kunde, passwort")
+
+cur.execute("""
+CREATE TABLE kunde (
+    kundenid serial PRIMARY KEY,
+    email varchar(100),
+    vorname varchar(50),
+    nachname varchar(100),
+    alter integer,
+    bankinstitut varchar(100)
+);
+""")
+
+cur.execute("""
+CREATE TABLE passwort (
+    kundenid serial PRIMARY KEY,
+    passwort text);
+""")
+
 
 conn.commit()
 
