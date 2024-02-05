@@ -13,8 +13,7 @@ cur.execute("DROP TABLE IF EXISTS kunde, passwort")
 
 cur.execute("""
 CREATE TABLE kunde (
-    kundenid serial PRIMARY KEY,
-    email varchar(100),
+    email varchar(100) PRIMARY KEY,
     vorname varchar(50),
     nachname varchar(100),
     alter integer,
@@ -24,7 +23,7 @@ CREATE TABLE kunde (
 
 cur.execute("""
 CREATE TABLE passwort (
-    kundenid serial PRIMARY KEY,
+    email varchar(100) PRIMARY KEY,
     passwort text);
 """)
 
