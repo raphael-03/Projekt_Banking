@@ -3,6 +3,7 @@ import psycopg2
 import os
 import re
 app = Flask(__name__)
+app.secret_key = 'AhmetundRaphael'
 
 #Datenbank verbindung
 def get_db_connection():
@@ -60,7 +61,7 @@ def registrierung():
         cur.execute("INSERT INTO kunde (vorname, nachname,email, alter, bankinstitut) VALUES (%s, %s, %s, %s, %s) RETURNING email",
                     (vorname, nachname, email, alter, bankinstitut))
         email = cur.fetchone()[0]
-
+        print('test')
         # Füge kundenid und passwort in die Passwort Tabelle
         cur.execute("INSERT INTO passwort (email, passwort) VALUES (%s, %s)",
                     (email, passwort))
