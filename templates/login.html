@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <form method="post" action="/login">
+
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" value="{{ email }}" placeholder="E-Mail" required>
+
+        <label for="password">Passwort:</label>
+        <input type="password" id="password" name="password" placeholder="Passwort" required>
+
+        <button type="submit">Login</button>
+   </form>
+</body>
+</html>

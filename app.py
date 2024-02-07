@@ -73,5 +73,28 @@ def registrierung():
         return redirect(url_for('startseite'))
     return render_template('registrierung.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT k.email FROM kunde k JOIN passwort p ON k.email = p.email WHERE k.email = %s AND p.passwort = %s",
+                    (email, password))
+        print("Test2")
+        result = cur.fetchone()
+        cur.close()
+        conn.close()
+        print("Test3")
+        if result:
+            session['email'] = result[0]
+            session['is_logged'] = True
+            return redirect(url_for('startseite'))
+        else:
+            return render_template("login.html", error="Passwort ist falsch oder Kunde existiert nicht",email=email)
+    return render_template('login.html')
+
 if __name__ == '__main__':
     app.run()
