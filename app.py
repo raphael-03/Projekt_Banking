@@ -96,5 +96,11 @@ def login():
             return render_template("login.html", error="Passwort ist falsch oder Kunde existiert nicht",email=email)
     return render_template('login.html')
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('email', None)
+    session.clear()
+    return redirect(url_for('startseite'))
+
 if __name__ == '__main__':
     app.run()
