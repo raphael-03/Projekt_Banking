@@ -27,6 +27,25 @@ CREATE TABLE passwort (
     passwort text);
 """)
 
+cur.execute("""
+CREATE TABLE Konto_anlegen (
+    kontoid integer PRIMARY KEY,
+    name varchar(100) NOT NULL,
+    FOREIGN KEY (email) REFERENCES kunde(email);
+)
+""")
+
+cur.execute("""
+CREATE TABLE Kontoeintrag (
+    kontoeintragid integer PRIMARY KEY,
+    Zeitstempel date,
+    Betrag integer decimal,
+    Name_Empfaenger varchar(100),
+    Verwendungszweck varchar(100),
+    FOREIGN KEY (Konto_anlegen) REFERENCES konto_anlegen(kontoid)
+)
+""")
+
 
 conn.commit()
 

@@ -6,11 +6,22 @@
 </head>
 <body>
     <form method="post" action="/startseite">
-
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div>{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% if name %}
+    <h1>Willkommen, {{ name }}!</h1>
+    {% else %}
     <h1>Willkommen</h1>
         <a href="/registrierung" class="button">Registrierung</a>
         <a href="/login" class="button">Login</a>
         <a href="/logout" class="button">Logout</a>
+    {% endif %}
+
     </form>
 </body>
 </html>

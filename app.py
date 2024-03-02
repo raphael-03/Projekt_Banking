@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import psycopg2
 import os
 import re
@@ -83,11 +83,9 @@ def login():
         cur = conn.cursor()
         cur.execute("SELECT k.email FROM kunde k JOIN passwort p ON k.email = p.email WHERE k.email = %s AND p.passwort = %s",
                     (email, password))
-        print("Test2")
         result = cur.fetchone()
         cur.close()
         conn.close()
-        print("Test3")
         if result:
             session['email'] = result[0]
             session['is_logged'] = True
@@ -98,8 +96,17 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    name_session = session.get("email")
+    cur.execute("SELECT vorname FROM kunde k WHERE k.email= %s",(name_session,))
+    name = cur.fetchone()
+    cur.close()
+    conn.close()
     session.pop('email', None)
-    session.clear()
+    if name:
+        # Senden einer Flash-Nachricht mit dem Verabschiedungstext
+        flash(f'Auf Wiedersehen, {name}! Sie wurden erfolgreich ausgeloggt.')
     return redirect(url_for('startseite'))
 
 if __name__ == '__main__':
