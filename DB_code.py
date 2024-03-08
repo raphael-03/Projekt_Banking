@@ -1,10 +1,56 @@
-import psycopg2, os
+import psycopg2
+import os
 
-#Datenbank verbindung
 def get_db_connection():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user=os.environ["DB_USERNAME"],
-        password=os.environ["DB_PASSWORD"])
+    host = "localhost"
+    database = "postgres"
+    user = os.environ.get("DB_USERNAME")
+    password = os.environ.get("DB_PASSWORD")
+    conn = psycopg2.connect(host=host, database=database, user=user, password=password)
     return conn
+
+def execute_sql(sql, values=None, fetch=False):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(sql, values)
+        if fetch:
+            return cur.fetchall()
+        conn.commit()
+    except psycopg2.DatabaseError as e:
+        print(f"Ein Fehler ist aufgetreten: {e}")
+        conn.rollback()
+    finally:
+        cur.close()
+        conn.close()
+
+def register_user(vorname, nachname, email, alter, bankinstitut, password):
+    user_exists = execute_sql("SELECT * FROM kunde WHERE email = %s", (email,), fetch=True)
+    if user_exists:
+        return 'Email existiert bereits'
+
+    execute_sql(
+        "INSERT INTO kunde (vorname, nachname, email, alter, bankinstitut) VALUES (%s, %s, %s, %s, %s)",
+        (vorname, nachname, email, alter, bankinstitut)
+    )
+
+    user_email = execute_sql("SELECT email FROM kunde WHERE email = %s", (email,), fetch=True)
+    if user_email:
+        execute_sql(
+            "INSERT INTO passwort (email, password) VALUES (%s, %s)",
+            (user_email[0][0], password)
+        )
+
+def login_user(email, password):
+    return execute_sql(
+        "SELECT k.email FROM kunde k JOIN password p ON k.email = p.email WHERE k.email = %s AND p.password = %s",
+        (email, password),
+        fetch=True
+    )
+
+def logout_user(email):
+    return execute_sql(
+        "SELECT vorname FROM kunde WHERE email = %s",
+        (email,),
+        fetch=True
+    )

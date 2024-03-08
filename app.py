@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
-from DB_code import get_db_connection
+from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -17,48 +17,26 @@ def registrierung():
         email = request.form.get('email')
         alter = request.form.get('alter')
         bankinstitut = request.form.get('bankinstitut')
-        passwort = request.form['passwort']
-        passwort_repeat = request.form['passwort_repeat']
+        password = request.form['password']
+        password_repeat = request.form['password_repeat']
 
         error = None
-        if len(passwort) < 8:
+        if len(password) < 8:
             error = 'Das Passwort muss mindestens 8 Zeichen lang sein.'
-        elif not re.search("[A-Z]", passwort):
+        elif not re.search("[A-Z]", password):
             error = 'Das Passwort muss mindestens einen Großbuchstaben enthalten.'
-        elif not re.search("[a-z]", passwort):
+        elif not re.search("[a-z]", password):
             error = 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.'
-        elif re.match("^[^A-Za-z0-9].*|.*[^A-Za-z0-9]$", passwort) or not re.search("[^A-Za-z0-9]", passwort):
+        elif re.match("^[^A-Za-z0-9].*|.*[^A-Za-z0-9]$", password) or not re.search("[^A-Za-z0-9]", password):
             error = 'Das Passwort muss mindestens ein Sonderzeichen enthalten, das nicht am Anfang oder Ende steht.'
-        elif passwort != passwort_repeat:
+        elif password != password_repeat:
             error = 'Passwörter stimmen nicht überein.'
 
-        # Fehlermeldung rendern
+        error = register_user(vorname, nachname, email, alter, bankinstitut, password)
         if error:
             return render_template('registrierung.html', error=error, vorname=vorname, nachname=nachname,
-                                   email=email, alter=alter, bankinstitut=bankinstitut, passwort=passwort,
-                                   passwort_repeat=passwort_repeat)
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute("SELECT * FROM kunde WHERE email = %s", (email,))
-        if cur.fetchone():
-            cur.close()
-            conn.close()
-            return render_template('registrierung.html',error='Email existiert bereits',vorname=vorname, nachname=nachname
-                                    ,email=email, alter=alter, bankinstitut=bankinstitut, password=passwort, passwort_repeat=passwort_repeat)
-        # Füge in die Kunden Tabelle ein
-        cur.execute("INSERT INTO kunde (vorname, nachname,email, alter, bankinstitut) VALUES (%s, %s, %s, %s, %s) RETURNING email",
-                    (vorname, nachname, email, alter, bankinstitut))
-        email = cur.fetchone()[0]
-        print('test')
-        # Füge kundenid und passwort in die Passwort Tabelle
-        cur.execute("INSERT INTO passwort (email, passwort) VALUES (%s, %s)",
-                    (email, passwort))
-
-        conn.commit()
-        cur.close()
-        conn.close()
+                                   email=email, alter=alter, bankinstitut=bankinstitut, passwort=password,
+                                   passwort_repeat=password_repeat)
 
         return redirect(url_for('startseite'))
     return render_template('registrierung.html')
@@ -69,32 +47,25 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT k.email FROM kunde k JOIN passwort p ON k.email = p.email WHERE k.email = %s AND p.passwort = %s",
-                    (email, password))
-        result = cur.fetchone()
-        cur.close()
-        conn.close()
+        result=login_user(email, password)
         if result:
             session['email'] = result[0]
             session['is_logged'] = True
-            return redirect(url_for('startseite'))
+            return redirect(url_for('profil_page'))
         else:
             return render_template("login.html", error="Passwort ist falsch oder Kunde existiert nicht",email=email)
     return render_template('login.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    name_session = session.get("email")
-    cur.execute("SELECT vorname FROM kunde k WHERE k.email= %s",(name_session,))
-    name = cur.fetchone()[0]
-    cur.close()
-    conn.close()
+    name=login_user(session.get('email'))
     session.pop('email', None)
     return render_template('logout_page.html', name=name)
+
+@app.route('/profil_page', methods=['GET', 'POST'])
+def profil_page():
+    print("Test_Profil_page")
+    return render_template('profil_page.html')
 
 if __name__ == '__main__':
     app.run()
