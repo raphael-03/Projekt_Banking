@@ -54,3 +54,12 @@ def logout_user(email):
         (email,),
         fetch=True
     )
+def konto_anlegen(kontoid, name, email):
+    return execute_sql(
+        "INSERT INTO konto_anlegen (kontoid, name, email) VALUES (%s,%s,%s)",
+    (kontoid, name, email),
+            fetch=True)
+def create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck):
+    return execute_sql(
+
+    )

@@ -29,7 +29,7 @@ CREATE TABLE password (
 
 cur.execute("""
 CREATE TABLE Konto_anlegen (
-    kontoid integer PRIMARY KEY,
+    kontoid integer  PRIMARY KEY,
     name varchar(100) NOT NULL,
     email varchar(100) NOT NULL,
     FOREIGN KEY (email) REFERENCES kunde(email)
@@ -54,6 +54,11 @@ INSERT INTO kunde(email, vorname, nachname, alter,bankinstitut ) VALUES(
 cur.execute("""
 INSERT INTO password(email, password) VALUES(
         'raphi23@mail.de', 'Raph#ael23'
+)""")
+
+cur.execute("""
+INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
+        1234,'test1', 'raphi23@mail.de'
 )""")
 
 conn.commit()

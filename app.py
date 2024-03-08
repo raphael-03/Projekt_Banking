@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
-from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user
+from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user, konto_anlegen
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -47,7 +47,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        result=login_user(email, password)
+        result = login_user(email, password)
         if result:
             session['email'] = result[0]
             session['is_logged'] = True
@@ -58,14 +58,29 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    name=login_user(session.get('email'))
+    name = login_user(session.get('email'))
     session.pop('email', None)
     return render_template('logout_page.html', name=name)
 
 @app.route('/profil_page', methods=['GET', 'POST'])
 def profil_page():
-    print("Test_Profil_page")
+    if request.method == 'POST':
+        name = request.form.get('create_konto')
+        email = session.get('email')
+        print(name, email[0])
+        create_konto = konto_anlegen(1, name, email[0])
+
+        return render_template('profil_page.html')
     return render_template('profil_page.html')
+
+@app.route('/kontoauszug_anlegen', methods=[ 'GET','POST'])
+def kontoauszug_anlegen():
+    zeitstempel = request.form.get('zeitstempel')
+    betrag = request.form.get('betrag')
+    empfaenger = request.form.get('empfaenger')
+    verwendungszweck = request.form.get('verwendungszweck')
+
+    return
 
 if __name__ == '__main__':
     app.run()
