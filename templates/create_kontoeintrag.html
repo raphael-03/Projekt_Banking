@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Neuen Kontoauszug anlegen</title>
+</head>
+<body>
+    <h1>Neuen Kontoauszug anlegen</h1>
+    <form action="/kontoauszug_anlegen" method="post">
+        <label for="zeitstempel">Zeitstempel</label>
+        <input type="datetime-local" id="zeitstempel" name="zeitstempel" required><br><br>
+
+        <label for="betrag">Überwiesener Betrag:</label>
+        <input type="number" id="betrag" name="betrag" step="0.01" required><br><br>
+
+        <label for="empfaenger">Name des Empfängers:</label>
+        <input type="text" id="empfaenger" name="empfaenger" required><br><br>
+
+        <label for="verwendungszweck">Verwendungszweck:</label>
+        <textarea id="verwendungszweck" name="verwendungszweck" required></textarea><br><br>
+
+        <input type="submit" value="Kontoauszug anlegen">
+    </form>
+</body>
+</html>

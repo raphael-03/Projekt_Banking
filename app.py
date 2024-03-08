@@ -1,21 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-import psycopg2
-import os
+from flask import Flask, render_template, request, redirect, url_for, session
 import re
+from DB_code import get_db_connection
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
-#Datenbank verbindung
-def get_db_connection():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user=os.environ["DB_USERNAME"],
-        password=os.environ["DB_PASSWORD"])
-    return conn
-
 # Benutzerregistrierung und -anmeldung
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def startseite():
     return render_template("startseite.html")
 
@@ -100,14 +90,11 @@ def logout():
     cur = conn.cursor()
     name_session = session.get("email")
     cur.execute("SELECT vorname FROM kunde k WHERE k.email= %s",(name_session,))
-    name = cur.fetchone()
+    name = cur.fetchone()[0]
     cur.close()
     conn.close()
     session.pop('email', None)
-    if name:
-        # Senden einer Flash-Nachricht mit dem Verabschiedungstext
-        flash(f'Auf Wiedersehen, {name}! Sie wurden erfolgreich ausgeloggt.')
-    return redirect(url_for('startseite'))
+    return render_template('logout_page.html', name=name)
 
 if __name__ == '__main__':
     app.run()

@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Startseite</title>
+    <title>Logout</title>
 </head>
 <body>
-    <form method="post" action="/startseite">
-    <h1>Willkommen</h1>
+    <form method="post" action="/logout">
+        <h1>Auf Wiedersehen {{ name }}</h1>
+        <a href="/" class="button">Startseite</a>
         <a href="/registrierung" class="button">Registrierung</a>
         <a href="/login" class="button">Login</a>
         <a href="/logout" class="button">Logout</a>
