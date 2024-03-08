@@ -28,11 +28,10 @@ CREATE TABLE password (
 """)
 
 cur.execute("""
-CREATE TABLE Konto_anlegen (
-    kontoid integer  PRIMARY KEY,
+CREATE TABLE konto_anlegen (
+    kontoid serial PRIMARY KEY,
     name varchar(100) NOT NULL,
-    email varchar(100) NOT NULL,
-    FOREIGN KEY (email) REFERENCES kunde(email)
+    email varchar(100) references kunde(email) NOT NULL 
 );
 """)
 

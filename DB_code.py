@@ -1,6 +1,7 @@
 import psycopg2
 import os
 
+
 def get_db_connection():
     host = "localhost"
     database = "postgres"
@@ -8,6 +9,7 @@ def get_db_connection():
     password = os.environ.get("DB_PASSWORD")
     conn = psycopg2.connect(host=host, database=database, user=user, password=password)
     return conn
+
 
 def execute_sql(sql, values=None, fetch=False):
     conn = get_db_connection()
@@ -23,6 +25,7 @@ def execute_sql(sql, values=None, fetch=False):
     finally:
         cur.close()
         conn.close()
+
 
 def register_user(vorname, nachname, email, alter, bankinstitut, password):
     user_exists = execute_sql("SELECT * FROM kunde WHERE email = %s", (email,), fetch=True)
@@ -41,6 +44,7 @@ def register_user(vorname, nachname, email, alter, bankinstitut, password):
             (user_email[0][0], password)
         )
 
+
 def login_user(email, password):
     return execute_sql(
         "SELECT k.email FROM kunde k JOIN password p ON k.email = p.email WHERE k.email = %s AND p.password = %s",
@@ -48,17 +52,23 @@ def login_user(email, password):
         fetch=True
     )
 
+
 def logout_user(email):
     return execute_sql(
         "SELECT vorname FROM kunde WHERE email = %s",
-        (email,),
+        (email[0]),
         fetch=True
     )
-def konto_anlegen(kontoid, name, email):
+
+
+def konto_anlegen(name, email):
+    print("Konto anlegen")
     return execute_sql(
-        "INSERT INTO konto_anlegen (kontoid, name, email) VALUES (%s,%s,%s)",
-    (kontoid, name, email),
-            fetch=True)
+        "INSERT INTO konto_anlegen (name, email) VALUES (%s,%s)",
+        (name, email,),
+        fetch=True)
+
+
 def create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck):
     return execute_sql(
 

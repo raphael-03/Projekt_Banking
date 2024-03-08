@@ -58,7 +58,7 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    name = login_user(session.get('email'))
+    name = logout_user(session.get('email'))
     session.pop('email', None)
     return render_template('logout_page.html', name=name)
 
@@ -68,9 +68,9 @@ def profil_page():
         name = request.form.get('create_konto')
         email = session.get('email')
         print(name, email[0])
-        create_konto = konto_anlegen(1, name, email[0])
+        create_konto = konto_anlegen(name, email[0])
 
-        return render_template('profil_page.html')
+        return render_template('profil_page.html',create_konto=create_konto)
     return render_template('profil_page.html')
 
 @app.route('/kontoauszug_anlegen', methods=[ 'GET','POST'])
