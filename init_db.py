@@ -29,9 +29,9 @@ CREATE TABLE password (
 
 cur.execute("""
 CREATE TABLE konto_anlegen (
-    kontoid serial PRIMARY KEY,
-    name varchar(100) NOT NULL,
-    email varchar(100) references kunde(email) NOT NULL 
+    kontoid SERIAL PRIMARY KEY,
+    name varchar(100),
+    email varchar(100) references kunde(email) 
 );
 """)
 
@@ -42,8 +42,7 @@ CREATE TABLE Kontoeintrag (
     Betrag decimal,
     Name_Empfaenger varchar(100),
     Verwendungszweck varchar(100),
-    kontoid integer not null ,
-    FOREIGN KEY (kontoid) REFERENCES konto_anlegen(kontoid)
+    kontoid integer references konto_anlegen(kontoid)
 )
 """)
 cur.execute("""

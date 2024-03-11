@@ -5,11 +5,14 @@
     <title>Profil_page</title>
 </head>
 <body>
-    <form action="/profil_page" method="post">
+    <form  method='Post' action="/profil_page">
         <a href="/logout" class="button">Logout</a>
-        <label for="create_konto">Konto erstellen</label>
-        <input type="text" id="create_konto" name="create_konto" placeholder="Konto erstellen">
-        <button type="submit">Erstellen</button>
+        <a href="/konto_erstellen" class="button">Konto erstellen</a>
+        <ul>
+            {% for name in konto_anzeige %}
+                <li><a href="/konto_waehlen/{{ name[0] }}">{{ name[0] }}</a></li>
+            {%  endfor %}
+        </ul>
     </form>
 </body>
 </html>

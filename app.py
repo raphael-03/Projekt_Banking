@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
-from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user, konto_anlegen
+from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -58,29 +58,46 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    name = logout_user(session.get('email'))
+    vorname = logout_user(session.get('email'))
     session.pop('email', None)
-    return render_template('logout_page.html', name=name)
+    return render_template('logout_page.html', vorname=vorname)
 
 @app.route('/profil_page', methods=['GET', 'POST'])
 def profil_page():
+        email = session.get('email')
+        konto_anzeige = konto_anzeigen(email)
+        print(konto_anzeige)
+        return render_template('profil_page.html', konto_anzeige=konto_anzeige)
+
+@app.route('/konto_erstellen', methods=['GET','POST'])
+def konto_erstellen():
     if request.method == 'POST':
         name = request.form.get('create_konto')
         email = session.get('email')
-        print(name, email[0])
-        create_konto = konto_anlegen(name, email[0])
+        konto_anlegen(name, email[0], )
+        return redirect(url_for('profil_page'))
+    return render_template('create_konto.html')
 
-        return render_template('profil_page.html',create_konto=create_konto)
-    return render_template('profil_page.html')
-
+@app.route('/konto_waehlen/<name>')
+def konto_waehlen(name):
+    email = session.get('email')
+    kontoid = finde_kontoid_durch_namen(name, email)
+    print(kontoid)
+    if kontoid is not None:
+        return redirect(url_for('kontoauszug_anlegen', kontoid=kontoid))
+    else:
+        return "Konto nicht gefunden", 404
 @app.route('/kontoauszug_anlegen', methods=[ 'GET','POST'])
-def kontoauszug_anlegen():
-    zeitstempel = request.form.get('zeitstempel')
-    betrag = request.form.get('betrag')
-    empfaenger = request.form.get('empfaenger')
-    verwendungszweck = request.form.get('verwendungszweck')
-
-    return
+def kontoauszug_anlegen(kontoid):
+    print(f"Route aufgerufen mit kontoid: {kontoid}")
+    if request.method == 'POST':
+        zeitstempel = request.form.get('zeitstempel')
+        betrag = request.form.get('betrag')
+        empfaenger = request.form.get('empfaenger')
+        verwendungszweck = request.form.get('verwendungszweck')
+        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck)
+        return redirect(url_for('profil_page'))
+    return render_template('create_kontoeintrag.html', kontoid=kontoid)
 
 if __name__ == '__main__':
     app.run()

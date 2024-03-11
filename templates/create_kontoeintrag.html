@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Neuen Kontoauszug anlegen</h1>
-    <form action="/kontoauszug_anlegen" method="post">
+    <form action="/kontoauszug_anlegen/{{ kontoid }}" method='POST'>
         <label for="zeitstempel">Zeitstempel</label>
         <input type="datetime-local" id="zeitstempel" name="zeitstempel" required><br><br>
 
@@ -19,7 +19,9 @@
         <label for="verwendungszweck">Verwendungszweck:</label>
         <textarea id="verwendungszweck" name="verwendungszweck" required></textarea><br><br>
 
-        <input type="submit" value="Kontoauszug anlegen">
+        <input type="hidden" name="kontoid" value="{{ kontoid }}">
+
+        <button type="submit">Eintrag erstellen</button>
     </form>
 </body>
 </html>
