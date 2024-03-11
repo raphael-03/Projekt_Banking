@@ -87,7 +87,7 @@ def konto_waehlen(name):
         return redirect(url_for('kontoauszug_anlegen', kontoid=kontoid))
     else:
         return "Konto nicht gefunden", 404
-@app.route('/kontoauszug_anlegen', methods=[ 'GET','POST'])
+@app.route('/kontoauszug_anlegen/<kontoid>', methods=[ 'GET','POST'])
 def kontoauszug_anlegen(kontoid):
     print(f"Route aufgerufen mit kontoid: {kontoid}")
     if request.method == 'POST':
@@ -95,7 +95,7 @@ def kontoauszug_anlegen(kontoid):
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
         verwendungszweck = request.form.get('verwendungszweck')
-        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck)
+        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck, kontoid)
         return redirect(url_for('profil_page'))
     return render_template('create_kontoeintrag.html', kontoid=kontoid)
 

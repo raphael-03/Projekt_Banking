@@ -37,7 +37,7 @@ CREATE TABLE konto_anlegen (
 
 cur.execute("""
 CREATE TABLE Kontoeintrag (
-    kontoeintragid integer PRIMARY KEY,
+    kontoeintragid SERIAL PRIMARY KEY,
     Zeitstempel date,
     Betrag decimal,
     Name_Empfaenger varchar(100),
