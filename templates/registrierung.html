@@ -5,7 +5,7 @@
     <title>Registrerung</title>
 </head>
 <body>
-<form action="/registrierung" method="post">
+<form action="/registrierung" method='POST'>
 
                 <label for="vorname">Vorname:</label>
                 <input type="text" id="vorname" name="vorname" value="{{ vorname }}" placeholder="Vorname" required>
@@ -22,11 +22,11 @@
                 <label for="bankinstitut">Bankinstitut:</label>
                 <input type="text" id="bankinstitut" name="bankinstitut" value="{{ bankinstitut }}" placeholder="bankinstitut" required>
 
-                <label for="passwort">Passwort:</label>
-                <input type="password" id="passwort" name="passwort" placeholder="Passwort" required>
+                <label for="password">Passwort:</label>
+                <input type="password" id="password" name="password" placeholder="Passwort" required>
 
-                <label for="passwort_repeat">Passwort Wiederholen:</label>
-                <input type="password" id="passwort_repeat" name="passwort_repeat" placeholder="Passwort Wiederholen" required>
+                <label for="password_repeat">Passwort Wiederholen:</label>
+                <input type="password" id="password_repeat" name="password_repeat" placeholder="Passwort Wiederholen" required>
 
             <button type="submit">Registrieren</button>
         </form>

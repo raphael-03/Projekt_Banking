@@ -7,12 +7,33 @@
 <body>
     <form  method='Post' action="/profil_page">
         <a href="/logout" class="button">Logout</a>
+    {% if konto_pruefen ==False %}
         <a href="/konto_erstellen" class="button">Konto erstellen</a>
+    {% endif %}
+    {% if konto_pruefen == True %}
+        <a href="/konto_anzeigen/{{ email[0] }}" class="button">Kontos anzeigen</a>
+    {% endif %}
         <ul>
             {% for name in konto_anzeige %}
                 <li><a href="/konto_waehlen/{{ name[0] }}">{{ name[0] }}</a></li>
             {%  endfor %}
         </ul>
+            <table>
+          <tr>
+            <th>zeitstempel</th>
+            <th>betrag</th>
+            <th>name_empfaenger</th>
+            <th>verwendungszweck</th>
+          </tr>
+            {% for konto in eintrag %}
+          <tr>
+            <td>{{ konto[0] }}</td>
+            <td>{{ konto[1] }}</td>
+            <td>{{ konto[2] }}</td>
+            <td>{{ konto[3] }}</td>
+          </tr>
+            {%  endfor %}
+    </table>
     </form>
 </body>
 </html>

@@ -23,7 +23,7 @@ CREATE TABLE kunde (
 
 cur.execute("""
 CREATE TABLE password (
-    email varchar(100) PRIMARY KEY,
+    email varchar(100) references kunde(email),
     password text);
 """)
 

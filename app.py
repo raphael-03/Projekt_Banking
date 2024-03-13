@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
-from DB_code import get_db_connection, execute_sql, register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen
+from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -17,8 +17,8 @@ def registrierung():
         email = request.form.get('email')
         alter = request.form.get('alter')
         bankinstitut = request.form.get('bankinstitut')
-        password = request.form['password']
-        password_repeat = request.form['password_repeat']
+        password = request.form.get('password')
+        password_repeat = request.form.get('password_repeat')
 
         error = None
         if len(password) < 8:
@@ -32,13 +32,14 @@ def registrierung():
         elif password != password_repeat:
             error = 'Passwörter stimmen nicht überein.'
 
-        error = register_user(vorname, nachname, email, alter, bankinstitut, password)
         if error:
             return render_template('registrierung.html', error=error, vorname=vorname, nachname=nachname,
-                                   email=email, alter=alter, bankinstitut=bankinstitut, passwort=password,
-                                   passwort_repeat=password_repeat)
+                                   email=email, alter=alter, bankinstitut=bankinstitut)
+        else:
 
-        return redirect(url_for('startseite'))
+            register_user(vorname, nachname, email, alter, bankinstitut, password)
+            return redirect(url_for('startseite'))
+
     return render_template('registrierung.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -58,16 +59,24 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    vorname = logout_user(session.get('email'))
+    vorname = logout_user(session.get('email'))[0]
     session.pop('email', None)
     return render_template('logout_page.html', vorname=vorname)
 
+#Dies ist hier die Übersicht nach dem Login
 @app.route('/profil_page', methods=['GET', 'POST'])
 def profil_page():
-        email = session.get('email')
-        konto_anzeige = konto_anzeigen(email)
-        print(konto_anzeige)
-        return render_template('profil_page.html', konto_anzeige=konto_anzeige)
+    email = session.get('email')
+    eintrag = letzten_kontoeintraege_zeigen_5(email)
+    konto_pruefen = pruefe_konto(email)
+    return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email)
+@app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
+def kontos_anzeigen(email):
+    konto_anzeige = konto_anzeigen(email)
+    eintrag = letzten_kontoeintraege_zeigen(email)
+    print(konto_anzeige)
+    return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige, eintrag=eintrag)
+
 
 @app.route('/konto_erstellen', methods=['GET','POST'])
 def konto_erstellen():
@@ -82,7 +91,6 @@ def konto_erstellen():
 def konto_waehlen(name):
     email = session.get('email')
     kontoid = finde_kontoid_durch_namen(name, email)
-    print(kontoid)
     if kontoid is not None:
         return redirect(url_for('kontoauszug_anlegen', kontoid=kontoid))
     else:
