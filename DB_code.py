@@ -97,4 +97,9 @@ def letzten_kontoeintraege_zeigen30(email):
     return eintrag
 
 def kategorien_erstellen(email, name):
-    return execute_sql("INSERT INTO kategorien(email, name) VALUES (%s, %s)", (email, name,))
+    pruefe = execute_sql("SELECT name FROM kategorien WHERE name=%s", (name,), fetch=True)
+    if pruefe:
+        return 'Kategorie existiert bereits'
+    else:
+        kategorien = execute_sql("INSERT INTO kategorien(email, name) VALUES (%s, %s)", (email, name,))
+        return kategorien

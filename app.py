@@ -71,6 +71,7 @@ def profil_page():
     eintrag = letzten_kontoeintraege_zeigen_5(email)
     konto_pruefen = pruefe_konto(email)
     anzahl = True
+
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
 @app.route('/benutzer_uebersicht/<email>/<anzahl>', methods=['GET', 'POST'])
@@ -121,15 +122,12 @@ def kontoauszug_anlegen(kontoid):
 #Klassifikation von Kontoeintraegen
 @app.route('/kategorien_anlegen/<email>', methods=[ 'GET','POST'])
 def kategorien_anlegen(email):
-    print("Test2")
     if request.method == 'POST':
-        print("Test1")
         name = request.form.get('k_name')
-        print(name)
         kategorien_erstellen(email, name)
 
-        return redirect(url_for('profil_page'))
-    return render_template('kategorien_anlegen.html', email=email[0])
+        return redirect(url_for('profil_page',email=email))
+    return render_template('kategorien_anlegen.html', email=email)
 
 @app.route('/kategorien_uebersicht', methods=[ 'GET','POST'])
 def kategorien_uebersicht():
