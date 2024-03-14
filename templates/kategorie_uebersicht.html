@@ -5,9 +5,13 @@
     <title>Kategorie Übersicht</title>
 </head>
 <body>
-    <form action="" method='POST'>
+    <form action="/kategorien_uebersicht/{{ email }}" method='POST'>
+        <a href="/profil_page" class="button">Profilseite</a>
+        <a href="/kategorien_anlegen/{{ email }}" class="button">kategorie anlegen</a>
 
-
+        {% for kategorie in kategoriebezeichnung %}
+            <li>{{ kategorie[0] }}</li>
+        {% endfor %}
     </form>
 </body>
 </html>

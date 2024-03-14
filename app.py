@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen
+from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen, kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -124,15 +124,18 @@ def kontoauszug_anlegen(kontoid):
 def kategorien_anlegen(email):
     if request.method == 'POST':
         name = request.form.get('k_name')
-        kategorien_erstellen(email, name)
-
-        return redirect(url_for('profil_page',email=email))
+        schlagwoerter = request.form.get('schlagwoerter')
+        kategorien_erstellen_2(email, name, schlagwoerter)
+        return redirect(url_for('kategorien_uebersicht',email=email, schlagwoerter=schlagwoerter))
     return render_template('kategorien_anlegen.html', email=email)
 
-@app.route('/kategorien_uebersicht', methods=[ 'GET','POST'])
-def kategorien_uebersicht():
-
-    return render_template('kategorie_uebersicht.html')
+@app.route('/kategorien_uebersicht/<email>', methods=[ 'GET','POST'])
+def kategorien_uebersicht(email):
+    kategoriebezeichnung = kategorien_waehlen(email)
+    if request.method == 'POST':
+        wort = request.form.get('wort')
+        schlagwort_einfuegen()
+    return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
 
 if __name__ == '__main__':
     app.run()

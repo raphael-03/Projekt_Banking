@@ -15,6 +15,7 @@
     {% endif %}
         <a href="/benutzer_uebersicht/{{ email[0]}}/{{ anzahl }}" class="button">Benutzerübersicht</a>
         <a href="/kategorien_anlegen/{{ email[0]}}" class="button">Kategorien_anlegen</a>
+        <a href="/kategorien_uebersicht/{{ email[0] }}" class="button">Kategorien Übersicht</a>
         <ul>
             {% for name in konto_anzeige %}
                 <li><a href="/konto_waehlen/{{ name[0] }}">{{ name[0] }}</a></li>

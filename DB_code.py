@@ -103,3 +103,28 @@ def kategorien_erstellen(email, name):
     else:
         kategorien = execute_sql("INSERT INTO kategorien(email, name) VALUES (%s, %s)", (email, name,))
         return kategorien
+
+def kategorien_waehlen(email):
+    return execute_sql("SELECT name, kategorienid FROM kategorien WHERE email=%s", (email,), fetch=True)
+
+def schlagwort_einfuegen(kategorienid, wort):
+    return execute_sql("INSERT INTO schlagwoerter(kategorienid, wort) VALUES (%s, %s)", (kategorienid, wort))
+
+def kategorien_erstellen_2(email, name, schlagwoerter):
+    execute_sql("INSERT INTO kategorien(email, name) VALUES (%s, %s);", (email, name))
+    ergebnis = execute_sql("SELECT * FROM kategorien WHERE email=%s AND name=%s", (email, name), fetch=True)
+    print(f"Ergebnis{ergebnis}")
+    if ergebnis:
+        kategorienid = ergebnis[0][0]
+        print(kategorienid)
+        print(f"1{schlagwoerter}")
+        if isinstance(schlagwoerter, str):
+            schlagwoerter = [wort.strip() for wort in schlagwoerter.split(',')]
+        for wort in schlagwoerter:
+            print(f"2{wort}")
+            execute_sql("INSERT INTO schlagwoerter(kategorienid, wort) VALUES (%s, %s)", (kategorienid, wort))
+        return email, print("fertig")
+    else:
+        print("Fehler")
+
+    return email
