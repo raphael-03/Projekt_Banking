@@ -71,21 +71,27 @@ def profil_page():
     eintrag = letzten_kontoeintraege_zeigen_5(email)
     konto_pruefen = pruefe_konto(email)
     anzahl = True
+    print(f"pg{anzahl}")
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
-@app.route('/benutzer_uebersicht/<email><anzahl>', methods=['GET', 'POST'])
+@app.route('/benutzer_uebersicht/<email>/<anzahl>', methods=['GET', 'POST'])
 def benutzer_uebersicht(email, anzahl):
-    if anzahl == True:
+    print(email)
+    print(anzahl)
+    if anzahl == 'True':
+        print('ja')
         eintrag = letzten_kontoeintraege_zeigen(email)
-        return render_template('benutzer_uebersicht.html', eintrag=eintrag, anzahl=anzahl)
+        anzahl = False
+        return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
     else:
+        print('Nein')
         eintrag = letzten_kontoeintraege_zeigen30(email)
-        return render_template('benutzer_uebersicht.html', eintrag=eintrag, anzahl=anzahl)
+        anzahl = True
+        return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
 
 @app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
 def kontos_anzeigen(email):
     konto_anzeige = konto_anzeigen(email)
-    print(konto_anzeige)
     return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige)
 
 @app.route('/konto_erstellen', methods=['GET','POST'])

@@ -24,11 +24,10 @@
           </tr>
             {%  endfor %}
     </table>
-    {%  if anzahl == True %}
-    <button type="submit">mehr anzeigen</button>
-    {%  else %}
-    <button type="submit">weniger anzeigen</button>
-    {%  endif%}
+    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">mehr anzeigen</a>
+
+    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">weniger anzeigen</a>
+
     </form>
 </body>
 </html>
