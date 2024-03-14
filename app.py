@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import letzten_kontoeintraege_zeigen30
+from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -119,7 +119,22 @@ def kontoauszug_anlegen(kontoid):
     return render_template('create_kontoeintrag.html', kontoid=kontoid)
 
 #Klassifikation von Kontoeintraegen
+@app.route('/kategorien_anlegen/<email>', methods=[ 'GET','POST'])
+def kategorien_anlegen(email):
+    print("Test2")
+    if request.method == 'POST':
+        print("Test1")
+        name = request.form.get('k_name')
+        print(name)
+        kategorien_erstellen(email, name)
 
+        return redirect(url_for('profil_page'))
+    return render_template('kategorien_anlegen.html', email=email[0])
+
+@app.route('/kategorien_uebersicht', methods=[ 'GET','POST'])
+def kategorien_uebersicht():
+
+    return render_template('kategorie_uebersicht.html')
 
 if __name__ == '__main__':
     app.run()

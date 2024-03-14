@@ -74,18 +74,23 @@ cur.execute("""
 INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
         1234,'test1', 'raphi23@mail.de'
 )""")
+cur.execute("""
+INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
+        1200,'Konto2', 'raphi23@mail.de'
+)""")
 
 cur.execute("""
 INSERT INTO kategorien (kategorienid,email, name) VALUES (1001,'raphi23@mail.de', 'Essen')
 """)
 cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2001, 1001, 'Edeka')""")
+cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2002, 1001, 'Rewe')""")
 
 sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck, kontoid )
             VALUES (%s, %s, %s, %s, %s)"""
 benutzer_eintraege= [
     ('2024-03-06', 100, 'Tim', 'Edeka', 1234),
-    ('2024-03-07', 100, 'Tim', 'Rewe', 1234),
-    ('2024-03-08', 100, 'Tim', 'auto', 1234),
+    ('2024-03-07', 100, 'Tim', 'Rewe', 1200),
+    ('2024-03-08', 100, 'Edeka', 'auto', 1234),
     ('2024-03-09', 100, 'Tim', 'essen', 1234),
     ('2024-03-10', 100, 'Tim', 'trinken', 1234),
     ('2024-03-11', 100, 'Tim', 'lidl', 1234),
