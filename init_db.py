@@ -9,7 +9,7 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
-cur.execute("DROP TABLE IF EXISTS kunde, password,Konto_anlegen,Kontoeintrag")
+cur.execute("DROP TABLE IF EXISTS kunde, password,Konto_anlegen,Kontoeintrag, kategorien, schlagwoerter")
 
 cur.execute("""
 CREATE TABLE kunde (
@@ -46,6 +46,22 @@ CREATE TABLE Kontoeintrag (
 )
 """)
 cur.execute("""
+CREATE TABLE kategorien(
+    kategorienid SERIAL PRIMARY KEY,
+    email varchar(100) references kunde(email),
+    name varchar(255) NOT NUll);
+
+""")
+
+cur.execute("""
+CREATE TABLE schlagwoerter(
+    schlagwoerterid SERIAL PRIMARY KEY,
+    kategorienid integer references kategorien(kategorienid),
+    wort VARCHAR(255) NOT NULL);
+""")
+
+
+cur.execute("""
 INSERT INTO kunde(email, vorname, nachname, alter,bankinstitut ) VALUES(
         'raphi23@mail.de', 'Raphael', 'Schmidt', 22, 'Sparkasse')""")
 
@@ -59,16 +75,21 @@ INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
         1234,'test1', 'raphi23@mail.de'
 )""")
 
+cur.execute("""
+INSERT INTO kategorien (kategorienid,email, name) VALUES (1001,'raphi23@mail.de', 'Essen')
+""")
+cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2001, 1001, 'Edeka')""")
+
 sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck, kontoid )
             VALUES (%s, %s, %s, %s, %s)"""
 benutzer_eintraege= [
-    ('2024-03-06', 100, 'Tim', 'Text', 1234),
-    ('2024-03-07', 100, 'Tim', 'Text', 1234),
-    ('2024-03-08', 100, 'Tim', 'Text', 1234),
-    ('2024-03-09', 100, 'Tim', 'Text', 1234),
-    ('2024-03-10', 100, 'Tim', 'Text', 1234),
-    ('2024-03-11', 100, 'Tim', 'Text', 1234),
-    ('2024-03-06', 120, 'Tim', 'Text', 1234),
+    ('2024-03-06', 100, 'Tim', 'Edeka', 1234),
+    ('2024-03-07', 100, 'Tim', 'Rewe', 1234),
+    ('2024-03-08', 100, 'Tim', 'auto', 1234),
+    ('2024-03-09', 100, 'Tim', 'essen', 1234),
+    ('2024-03-10', 100, 'Tim', 'trinken', 1234),
+    ('2024-03-11', 100, 'Tim', 'lidl', 1234),
+    ('2024-03-06', 120, 'Tim', 'netto', 1234),
     ('2024-03-06', 120, 'Tim', 'Text', 1234),
     ('2024-04-06', 100, 'Tim', 'Text', 1234),
     ('2024-04-07', 100, 'Tim', 'Text', 1234),

@@ -71,20 +71,15 @@ def profil_page():
     eintrag = letzten_kontoeintraege_zeigen_5(email)
     konto_pruefen = pruefe_konto(email)
     anzahl = True
-    print(f"pg{anzahl}")
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
 @app.route('/benutzer_uebersicht/<email>/<anzahl>', methods=['GET', 'POST'])
 def benutzer_uebersicht(email, anzahl):
-    print(email)
-    print(anzahl)
     if anzahl == 'True':
-        print('ja')
         eintrag = letzten_kontoeintraege_zeigen(email)
         anzahl = False
         return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
     else:
-        print('Nein')
         eintrag = letzten_kontoeintraege_zeigen30(email)
         anzahl = True
         return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
@@ -100,7 +95,7 @@ def konto_erstellen():
         name = request.form.get('create_konto')
         email = session.get('email')
         konto_anlegen(name, email[0], )
-        return redirect(url_for('profil_page'))
+        return redirect(url_for('kontos_anzeigen', email=email[0]))
     return render_template('create_konto.html')
 
 @app.route('/konto_waehlen/<name>')
@@ -122,6 +117,9 @@ def kontoauszug_anlegen(kontoid):
         create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck, kontoid)
         return redirect(url_for('profil_page'))
     return render_template('create_kontoeintrag.html', kontoid=kontoid)
+
+#Klassifikation von Kontoeintraegen
+
 
 if __name__ == '__main__':
     app.run()

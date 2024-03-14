@@ -24,10 +24,11 @@
           </tr>
             {%  endfor %}
     </table>
-    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">mehr anzeigen</a>
-
+    {% if anzahl %}
     <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">weniger anzeigen</a>
-
+    {% else %}
+    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">mehr anzeigen</a>
+    {% endif %}
     </form>
 </body>
 </html>
