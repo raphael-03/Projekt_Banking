@@ -59,6 +59,31 @@ INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
         1234,'test1', 'raphi23@mail.de'
 )""")
 
+sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck, kontoid )
+            VALUES (%s, %s, %s, %s, %s)"""
+benutzer_eintraege= [
+    ('2024-03-06', 100, 'Tim', 'Text', 1234),
+    ('2024-03-07', 100, 'Tim', 'Text', 1234),
+    ('2024-03-08', 100, 'Tim', 'Text', 1234),
+    ('2024-03-09', 100, 'Tim', 'Text', 1234),
+    ('2024-03-10', 100, 'Tim', 'Text', 1234),
+    ('2024-03-11', 100, 'Tim', 'Text', 1234),
+    ('2024-03-06', 120, 'Tim', 'Text', 1234),
+    ('2024-03-06', 120, 'Tim', 'Text', 1234),
+    ('2024-04-06', 100, 'Tim', 'Text', 1234),
+    ('2024-04-07', 100, 'Tim', 'Text', 1234),
+    ('2024-05-06', 100, 'Tim', 'Text', 1234),
+    ('2024-06-06', 100, 'Tim', 'Text', 1234),
+    ('2024-07-06', 100, 'Tim', 'Text', 1234),
+    ('2024-08-06', 100, 'Tim', 'Text', 1234),
+    ('2024-09-06', 100, 'Tim', 'Text', 1234),
+    ('2024-10-06', 100, 'Tim', 'Text', 1234),
+    ('2024-11-06', 100, 'Tim', 'Text', 1234),
+    ('2024-12-06', 100, 'Tim', 'Text', 1234),
+    ('2025-03-06', 100, 'Tim', 'Text', 1234)
+]
+cur.executemany(sql_eintraege, benutzer_eintraege)
+
 conn.commit()
 
 cur.close()

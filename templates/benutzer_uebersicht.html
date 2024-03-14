@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Benutzerübersicht</title>
+</head>
+<body>
+    <form action="/benutzer_uebersicht" method='POST' >
+    <a href="/logout" class="button">Logout</a>
+    <a href="/profil_page" class="button">Profilseite</a>
+        <table>
+          <tr>
+            <th>zeitstempel</th>
+            <th>betrag</th>
+            <th>name_empfaenger</th>
+            <th>verwendungszweck</th>
+          </tr>
+            {% for konto in eintrag %}
+          <tr>
+            <td>{{ konto[0] }}</td>
+            <td>{{ konto[1] }}</td>
+            <td>{{ konto[2] }}</td>
+            <td>{{ konto[3] }}</td>
+          </tr>
+            {%  endfor %}
+    </table>
+    {%  if anzahl == True %}
+    <button type="submit">mehr anzeigen</button>
+    {%  else %}
+    <button type="submit">weniger anzeigen</button>
+    {%  endif%}
+    </form>
+</body>
+</html>

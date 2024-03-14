@@ -91,3 +91,7 @@ def letzten_kontoeintraege_zeigen(email):
 def letzten_kontoeintraege_zeigen_5(email):
     eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 5", (email,), fetch=True)
     return eintrag
+
+def letzten_kontoeintraege_zeigen30(email):
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 30", (email,), fetch=True)
+    return eintrag

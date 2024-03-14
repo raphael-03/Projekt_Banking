@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
+from DB_code import letzten_kontoeintraege_zeigen30
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -69,14 +70,23 @@ def profil_page():
     email = session.get('email')
     eintrag = letzten_kontoeintraege_zeigen_5(email)
     konto_pruefen = pruefe_konto(email)
-    return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email)
+    anzahl = True
+    return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
+
+@app.route('/benutzer_uebersicht/<email><anzahl>', methods=['GET', 'POST'])
+def benutzer_uebersicht(email, anzahl):
+    if anzahl == True:
+        eintrag = letzten_kontoeintraege_zeigen(email)
+        return render_template('benutzer_uebersicht.html', eintrag=eintrag, anzahl=anzahl)
+    else:
+        eintrag = letzten_kontoeintraege_zeigen30(email)
+        return render_template('benutzer_uebersicht.html', eintrag=eintrag, anzahl=anzahl)
+
 @app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
 def kontos_anzeigen(email):
     konto_anzeige = konto_anzeigen(email)
-    eintrag = letzten_kontoeintraege_zeigen(email)
     print(konto_anzeige)
-    return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige, eintrag=eintrag)
-
+    return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige)
 
 @app.route('/konto_erstellen', methods=['GET','POST'])
 def konto_erstellen():
