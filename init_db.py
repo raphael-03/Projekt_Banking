@@ -93,28 +93,12 @@ cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) V
 cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2003, 1001, 'lidl')""")
 cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2004, 1002, 'auto')""")
 
-sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck,email, kontoid )
-            VALUES (%s, %s, %s, %s, %s, %s)"""
+sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck,kategorienid ,email, kontoid )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 benutzer_eintraege= [
-    ('2024-03-06', 100, 'Tim', 'Edeka','raphi23@mail.de', 1234),
-    ('2024-03-07', 100, 'Tim', 'Rewe','raphi23@mail.de', 1200),
-    ('2024-03-08', 100, 'Edeka','auto','raphi23@mail.de', 1234),
-    ('2024-03-09', 100, 'Tim', 'essen','raphi23@mail.de', 1234),
-    ('2024-03-10', 100, 'Tim', 'trinken','raphi23@mail.de',1234),
-    ('2024-03-11', 100, 'Tim', 'lidl','raphi23@mail.de', 1234),
-    ('2024-03-06', 120, 'Tim', 'netto','raphi23@mail.de', 1234),
-    ('2024-03-06', 120, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-04-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-04-07', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-05-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-06-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-07-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-08-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-09-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-10-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-11-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2024-12-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
-    ('2025-03-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234)
+    ('2024-03-06', 100, 'Tim', 'Edeka',1001,'raphi23@mail.de', 1234),
+    ('2024-03-07', 100, 'Tim', 'Rewe',1001,'raphi23@mail.de', 1200),
+    ('2024-03-08', 100, 'Edeka','auto',1002,'raphi23@mail.de', 1234)
 ]
 cur.executemany(sql_eintraege, benutzer_eintraege)
 
