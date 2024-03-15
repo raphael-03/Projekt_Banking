@@ -85,17 +85,15 @@ def finde_kontoid_durch_namen(name, email):
         kontoid = ergebnis[0][0]
         return kontoid
 def letzten_kontoeintraege_zeigen(email):
-    kategorie = execute_sql("SELECT name")
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, name  FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 15", (email,), fetch=True)
-    print(kategorie)
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, name  FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kontoeintragid = kategorien.kategorienid WHERE kontoeintrag.email = %s ORDER BY zeitstempel LIMIT 15", (email,), fetch=True)
     return eintrag
 
 def letzten_kontoeintraege_zeigen_5(email):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 5", (email,), fetch=True)
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, name FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kontoeintragid = kategorien.kategorienid WHERE kontoeintrag.email = %s ORDER BY zeitstempel LIMIT 5", (email,), fetch=True)
     return eintrag
 
 def letzten_kontoeintraege_zeigen30(email):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 15", (email,), fetch=True)
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, name  FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kontoeintragid = kategorien.kategorienid WHERE kontoeintrag.email = %s ORDER BY zeitstempel LIMIT 30", (email,), fetch=True)
     return eintrag
 
 def kategorien_erstellen(email, name):
