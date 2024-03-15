@@ -6,7 +6,9 @@
 </head>
 <body>
     <h1>Neuen Kontoauszug anlegen</h1>
+    <a href="/profil_page" class="button">Profilseite</a>
     <form action="/kontoauszug_anlegen/{{ kontoid }}" method='POST'>
+
         <label for="zeitstempel">Zeitstempel</label>
         <input type="datetime-local" id="zeitstempel" name="zeitstempel" required><br><br>
 

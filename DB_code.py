@@ -76,8 +76,8 @@ def pruefe_konto(email):
         return True
     return False
 
-def create_kontoauszug_anlegen(Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kontoid):
-    return execute_sql("INSERT INTO Kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kontoid) VALUES (%s, %s, %s, %s, %s)", (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kontoid))
+def create_kontoauszug_anlegen(Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kontoid):
+    return execute_sql("INSERT INTO Kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck,email,  kontoid) VALUES (%s, %s, %s, %s, %s, %s)", (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck,email, kontoid))
 
 def finde_kontoid_durch_namen(name, email):
     ergebnis = execute_sql("SELECT kontoid FROM konto_anlegen WHERE name = %s AND email = %s", (name, email), fetch=True)
@@ -85,7 +85,9 @@ def finde_kontoid_durch_namen(name, email):
         kontoid = ergebnis[0][0]
         return kontoid
 def letzten_kontoeintraege_zeigen(email):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 15", (email,), fetch=True)
+    kategorie = execute_sql("SELECT name")
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, name  FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 15", (email,), fetch=True)
+    print(kategorie)
     return eintrag
 
 def letzten_kontoeintraege_zeigen_5(email):
@@ -93,7 +95,7 @@ def letzten_kontoeintraege_zeigen_5(email):
     return eintrag
 
 def letzten_kontoeintraege_zeigen30(email):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 30", (email,), fetch=True)
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck FROM kontoeintrag JOIN konto_anlegen ka ON kontoeintrag.kontoid = ka.kontoid WHERE email = %s ORDER BY zeitstempel DESC LIMIT 15", (email,), fetch=True)
     return eintrag
 
 def kategorien_erstellen(email, name):
@@ -105,7 +107,7 @@ def kategorien_erstellen(email, name):
         return kategorien
 
 def kategorien_waehlen(email):
-    return execute_sql("SELECT name, kategorienid FROM kategorien WHERE email=%s", (email,), fetch=True)
+    return execute_sql("SELECT name,kategorienid FROM kategorien WHERE email=%s", (email,), fetch=True)
 
 def schlagwort_einfuegen(kategorienid, wort):
     return execute_sql("INSERT INTO schlagwoerter(kategorienid, wort) VALUES (%s, %s)", (kategorienid, wort))

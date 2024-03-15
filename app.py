@@ -111,11 +111,12 @@ def konto_waehlen(name):
 def kontoauszug_anlegen(kontoid):
     print(f"Route aufgerufen mit kontoid: {kontoid}")
     if request.method == 'POST':
+        email = session.get('email')
         zeitstempel = request.form.get('zeitstempel')
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
         verwendungszweck = request.form.get('verwendungszweck')
-        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck, kontoid)
+        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck,email, kontoid)
         return redirect(url_for('profil_page'))
     return render_template('create_kontoeintrag.html', kontoid=kontoid)
 
@@ -136,6 +137,7 @@ def kategorien_uebersicht(email):
         wort = request.form.get('wort')
         schlagwort_einfuegen()
     return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
+
 
 if __name__ == '__main__':
     app.run()

@@ -34,6 +34,13 @@ CREATE TABLE konto_anlegen (
     email varchar(100) references kunde(email) 
 );
 """)
+cur.execute("""
+CREATE TABLE kategorien(
+    kategorienid SERIAL PRIMARY KEY,
+    email varchar(100) references kunde(email),
+    name varchar(255) NOT NUll);
+
+""")
 
 cur.execute("""
 CREATE TABLE Kontoeintrag (
@@ -42,16 +49,12 @@ CREATE TABLE Kontoeintrag (
     Betrag decimal,
     Name_Empfaenger varchar(100),
     Verwendungszweck varchar(100),
+    kategorienid integer references kategorien(kategorienid),
+    email varchar(100) references kunde(email),
     kontoid integer references konto_anlegen(kontoid)
 )
 """)
-cur.execute("""
-CREATE TABLE kategorien(
-    kategorienid SERIAL PRIMARY KEY,
-    email varchar(100) references kunde(email),
-    name varchar(255) NOT NUll);
 
-""")
 
 cur.execute("""
 CREATE TABLE schlagwoerter(
@@ -82,31 +85,36 @@ INSERT INTO konto_anlegen(kontoid,name, email) VALUES(
 cur.execute("""
 INSERT INTO kategorien (kategorienid,email, name) VALUES (1001,'raphi23@mail.de', 'Essen')
 """)
+cur.execute("""
+INSERT INTO kategorien (kategorienid,email, name) VALUES (1002,'raphi23@mail.de', 'auto')
+""")
 cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2001, 1001, 'Edeka')""")
 cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2002, 1001, 'Rewe')""")
+cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2003, 1001, 'lidl')""")
+cur.execute("""INSERT INTO schlagwoerter (schlagwoerterid, kategorienid, wort) VALUES (2004, 1002, 'auto')""")
 
-sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck, kontoid )
-            VALUES (%s, %s, %s, %s, %s)"""
+sql_eintraege="""INSERT INTO Kontoeintrag(Zeitstempel,Betrag, Name_Empfaenger, Verwendungszweck,email, kontoid )
+            VALUES (%s, %s, %s, %s, %s, %s)"""
 benutzer_eintraege= [
-    ('2024-03-06', 100, 'Tim', 'Edeka', 1234),
-    ('2024-03-07', 100, 'Tim', 'Rewe', 1200),
-    ('2024-03-08', 100, 'Edeka', 'auto', 1234),
-    ('2024-03-09', 100, 'Tim', 'essen', 1234),
-    ('2024-03-10', 100, 'Tim', 'trinken', 1234),
-    ('2024-03-11', 100, 'Tim', 'lidl', 1234),
-    ('2024-03-06', 120, 'Tim', 'netto', 1234),
-    ('2024-03-06', 120, 'Tim', 'Text', 1234),
-    ('2024-04-06', 100, 'Tim', 'Text', 1234),
-    ('2024-04-07', 100, 'Tim', 'Text', 1234),
-    ('2024-05-06', 100, 'Tim', 'Text', 1234),
-    ('2024-06-06', 100, 'Tim', 'Text', 1234),
-    ('2024-07-06', 100, 'Tim', 'Text', 1234),
-    ('2024-08-06', 100, 'Tim', 'Text', 1234),
-    ('2024-09-06', 100, 'Tim', 'Text', 1234),
-    ('2024-10-06', 100, 'Tim', 'Text', 1234),
-    ('2024-11-06', 100, 'Tim', 'Text', 1234),
-    ('2024-12-06', 100, 'Tim', 'Text', 1234),
-    ('2025-03-06', 100, 'Tim', 'Text', 1234)
+    ('2024-03-06', 100, 'Tim', 'Edeka','raphi23@mail.de', 1234),
+    ('2024-03-07', 100, 'Tim', 'Rewe','raphi23@mail.de', 1200),
+    ('2024-03-08', 100, 'Edeka','auto','raphi23@mail.de', 1234),
+    ('2024-03-09', 100, 'Tim', 'essen','raphi23@mail.de', 1234),
+    ('2024-03-10', 100, 'Tim', 'trinken','raphi23@mail.de',1234),
+    ('2024-03-11', 100, 'Tim', 'lidl','raphi23@mail.de', 1234),
+    ('2024-03-06', 120, 'Tim', 'netto','raphi23@mail.de', 1234),
+    ('2024-03-06', 120, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-04-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-04-07', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-05-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-06-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-07-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-08-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-09-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-10-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-11-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2024-12-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234),
+    ('2025-03-06', 100, 'Tim', 'Text','raphi23@mail.de', 1234)
 ]
 cur.executemany(sql_eintraege, benutzer_eintraege)
 
