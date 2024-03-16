@@ -92,11 +92,6 @@ def finde_kontoid_durch_namen(name, email):
     if ergebnis:
         kontoid = ergebnis[0][0]
         return kontoid
-"""
-def letzten_kontoeintraege_zeigen(email, kontoid, anzahl_eintraege):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name  FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid=%s ORDER BY zeitstempel LIMIT %s", (email,kontoid,anzahl_eintraege,), fetch=True)
-    return eintrag
-"""
 def letzten_kontoeintraege_zeigen(email, kontoid, anzahl_eintraege):
     if anzahl_eintraege == -1:  # Alle Einträge anzeigen
         eintrag = execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s ORDER BY zeitstempel", (email, kontoid), fetch=True)

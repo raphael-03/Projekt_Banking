@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2, finde_kontoid_name_email
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
