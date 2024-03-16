@@ -5,9 +5,10 @@
     <title>Benutzerübersicht</title>
 </head>
 <body>
-    <form action="/benutzer_uebersicht" method='POST' >
+    <form action="/konto_uebersicht" method='POST' >
     <a href="/logout" class="button">Logout</a>
     <a href="/profil_page" class="button">Profilseite</a>
+    <a href="/konto_anzeigen/{{ email[0] }}" class="button">Konto Übersicht</a>
         <table>
           <tr>
             <th>zeitstempel</th>

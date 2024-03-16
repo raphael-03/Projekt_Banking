@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen, kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2
+from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen, kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2, finde_kontoid_name_email
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -74,16 +74,13 @@ def profil_page():
 
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
-@app.route('/benutzer_uebersicht/<email>/<anzahl>', methods=['GET', 'POST'])
-def benutzer_uebersicht(email, anzahl):
-    if anzahl == 'True':
-        eintrag = letzten_kontoeintraege_zeigen(email)
-        anzahl = False
-        return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
-    else:
-        eintrag = letzten_kontoeintraege_zeigen30(email)
-        anzahl = True
-        return render_template('benutzer_uebersicht.html', email=email, eintrag=eintrag, anzahl=anzahl)
+@app.route('/konto_uebersicht/<name>', methods=['GET', 'POST'])
+def konto_uebersicht(name):
+    email = session.get('email')
+    kontid = finde_kontoid_name_email(email, name)
+    eintrag = letzten_kontoeintraege_zeigen(email, kontid[0])
+    return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name)
+
 
 @app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
 def kontos_anzeigen(email):
