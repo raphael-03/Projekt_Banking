@@ -9,6 +9,7 @@
     <a href="/logout" class="button">Logout</a>
     <a href="/profil_page" class="button">Profilseite</a>
     <a href="/konto_anzeigen/{{ email[0] }}" class="button">Konto Übersicht</a>
+    <a href="/kontoauszug_anlegen/{{ kontoid[0]}}/{{ name }}" class="button">Eintrag erstellen</a>
         <table>
           <tr>
             <th>zeitstempel</th>
@@ -27,11 +28,8 @@
           </tr>
             {%  endfor %}
     </table>
-    {% if anzahl %}
-    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">weniger anzeigen</a>
-    {% else %}
-    <a href="/benutzer_uebersicht/{{ email}}/{{ anzahl }}" class="button">mehr anzeigen</a>
-    {% endif %}
+    <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege={{ anzahl_eintraege + 15 }}" class="button">15 Weitere Einträge anzeigen</a>
+    <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege=-1" class="button">Alle Einträge zeigen</a>
     </form>
 </body>
 </html>

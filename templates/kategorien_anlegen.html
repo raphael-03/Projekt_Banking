@@ -5,7 +5,9 @@
     <title>Kategorien anlegen</title>
 </head>
 <body>
+    <a href="/kategorien_uebersicht/{{ email }}" class="button">Kategorie Übersicht</a>
     <form action="/kategorien_anlegen/{{email}}" method='POST'>
+
     <label for="k_name">Kategoriename:</label>
         <input type="text" id="k_name" name="k_name" required>
 

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import letzten_kontoeintraege_zeigen30, kategorien_erstellen, kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2, finde_kontoid_name_email
+from DB_code import kategorien_waehlen, schlagwort_einfuegen, kategorien_erstellen_2, finde_kontoid_name_email
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -77,9 +77,11 @@ def profil_page():
 @app.route('/konto_uebersicht/<name>', methods=['GET', 'POST'])
 def konto_uebersicht(name):
     email = session.get('email')
-    kontid = finde_kontoid_name_email(email, name)
-    eintrag = letzten_kontoeintraege_zeigen(email, kontid[0])
-    return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name)
+    kontid = finde_kontoid_name_email(email, name)[0]
+    anzahl_eintraege = request.args.get('anzahl_eintraege', default=15, type=int)
+    eintrag = letzten_kontoeintraege_zeigen(email, kontid, anzahl_eintraege)
+
+    return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name, kontoid=kontid, anzahl_eintraege=anzahl_eintraege)
 
 
 @app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
@@ -104,8 +106,8 @@ def konto_waehlen(name):
         return redirect(url_for('kontoauszug_anlegen', kontoid=kontoid))
     else:
         return "Konto nicht gefunden", 404
-@app.route('/kontoauszug_anlegen/<kontoid>', methods=[ 'GET','POST'])
-def kontoauszug_anlegen(kontoid):
+@app.route('/kontoauszug_anlegen/<kontoid>/<name>', methods=[ 'GET','POST'])
+def kontoauszug_anlegen(kontoid, name):
     print(f"Route aufgerufen mit kontoid: {kontoid}")
     if request.method == 'POST':
         email = session.get('email')
@@ -113,9 +115,9 @@ def kontoauszug_anlegen(kontoid):
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
         verwendungszweck = request.form.get('verwendungszweck')
-        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck,email, kontoid)
-        return redirect(url_for('profil_page'))
-    return render_template('create_kontoeintrag.html', kontoid=kontoid)
+        create_kontoauszug_anlegen(zeitstempel, betrag, empfaenger, verwendungszweck, email, kontoid)
+        return redirect(url_for('konto_uebersicht', kontoid=kontoid, name=name))
+    return render_template('create_kontoeintrag.html', kontoid=kontoid, name=name)
 
 #Klassifikation von Kontoeintraegen
 @app.route('/kategorien_anlegen/<email>', methods=[ 'GET','POST'])
@@ -130,9 +132,6 @@ def kategorien_anlegen(email):
 @app.route('/kategorien_uebersicht/<email>', methods=[ 'GET','POST'])
 def kategorien_uebersicht(email):
     kategoriebezeichnung = kategorien_waehlen(email)
-    if request.method == 'POST':
-        wort = request.form.get('wort')
-        schlagwort_einfuegen()
     return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
 
 
