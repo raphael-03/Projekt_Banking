@@ -138,3 +138,54 @@ def kategorien_erstellen_2(email, name, schlagwoerter):
         print("Fehler")
 
     return email
+
+#suchfunktion
+"""
+def ergebnis_suchfunktion(email, kontoid,stichwort, startDate, endDate, betrag, empfaenger ):
+    erg_suchfunktion = execute_sql("SELECT * FROM kontoeintrag LEFT JOIN kategorien  ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email =%s "
+                                   "AND kontoeintrag.kontoid=%s (verwendungszweck ILIKE %s OR %s = '') "
+                                   "AND (wertstellungsdatum BETWEEN %s AND %s OR (%s = '' OR %s = '')) "
+                                   "AND (betrag = %s OR %s = '')"
+                                    "AND (empfaenger ILIKE %s OR %s = '')",(email, kontoid, f'%{stichwort}%', stichwort, startDate, endDate, startDate, endDate, betrag, betrag, f'%{empfaenger}%', empfaenger,))
+    return erg_suchfunktion, print(erg_suchfunktion)
+"""
+"""
+def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
+    erg_suchfunktion = execute_sql("SELECT * FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s AND (verwendungszweck ILIKE %s OR %s = '') AND (Zeitstempel BETWEEN %s AND %s OR %s = '' OR %s = '') AND (betrag = %s OR %s = '') AND (empfaenger ILIKE %s OR %s = '') ", (email, kontoid, f'%{stichwort}%', stichwort, startDate, endDate, startDate, endDate, betrag, betrag, f'%{empfaenger}%', empfaenger))
+    return erg_suchfunktion, print(erg_suchfunktion)
+"""
+
+def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
+    # Grundlegende SQL-Abfrage
+    sql_query = "SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s "
+
+    # Liste für die Parameter der Abfrage
+    params = [email, kontoid]
+    print(f"1{params}")
+    # Bedingung für Verwendungszweck hinzufügen, falls vorhanden
+    if stichwort:
+        sql_query += "AND verwendungszweck = %s "
+        params.append(f'{stichwort}')
+        print(f"2{params}")
+
+    # Datumsbereich zur Abfrage hinzufügen, wenn beide Daten vorhanden sind
+    if startDate and endDate:
+        sql_query += "AND zeitstempel BETWEEN %s AND %s "
+        params.extend([startDate, endDate])
+        print(f"3{params}")
+
+    # Bedingung für betrag hinzufügen, wenn ein gültiger Wert angegeben ist
+    if betrag not in [None, '', '0']:  # Angenommen, '0' ist ein ungültiger Wert für betrag
+        sql_query += "AND betrag = %s "
+        params.append(betrag)
+        print(f"4{params}")
+
+    # Bedingung für empfaenger hinzufügen
+    if empfaenger:  # Nur hinzufügen, wenn empfaenger nicht leer ist
+        sql_query += "AND Name_Empfaenger = %s "
+        params.extend([f'{empfaenger}'])
+        print(f"5{params}")
+
+    # SQL-Abfrage ausführen
+    erg_suchfunktion = execute_sql(sql_query, tuple(params), fetch=True)
+    return erg_suchfunktion

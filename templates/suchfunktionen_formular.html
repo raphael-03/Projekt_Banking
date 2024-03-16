@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suchfunktion</title>
+</head>
+<body>
+    <h2>Suche in deinem Konto</h2>
+    <form action="/suchfunktionen_formular/{{ kontoid }}" method='POST'>
+
+            <label for="stichwort">Stichwort im Verwendungszweck:</label>
+            <input type="text" id="stichwort" name="stichwort">
+
+
+            <label for="startDate">Anfangsdatum der Zeitspanne:</label>
+            <input type="datetime-local" id="startDate" name="startDate">
+            <label for="endDate">Enddatum der Zeitspanne:</label>
+            <input type="datetime-local" id="endDate" name="endDate">
+
+
+            <label for="betrag">Betrag:</label>
+            <input type="number" id="betrag" name="betrag" step="0.01" min="0">
+
+            <label for="empfaenger">Name des Empfängers:</label>
+            <input type="text" id="empfaenger" name="empfaenger">
+
+
+            <button type="submit">Suche starten</button>
+
+        <table>
+
+        <tr>
+            <th>Zeitstempel</th>
+            <th>Betrag</th>
+            <th>Empfänger</th>
+            <th>Verwendungszweck</th>
+            <th>Kategorie</th>
+        </tr>
+        {% for eintrag in suchfunktion_ausgabe %}
+            <tr>
+                <td>{{ eintrag[0] }}</td>
+                <td>{{ eintrag[1] }}</td>
+                <td>{{ eintrag[2] }}</td>
+                <td>{{ eintrag[3] }}</td>
+                <td>{{ eintrag[4] if eintrag[4] != None else 'Keine Kategorie zugewiesen'  }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </form>
+</body>
+</html>

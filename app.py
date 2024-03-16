@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -134,6 +134,23 @@ def kategorien_uebersicht(email):
     kategoriebezeichnung = kategorien_waehlen(email)
     return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
 
+#Suchfunktionen
+
+@app.route('/suchfunktionen_formular/<kontoid>', methods=['GET', 'POST'])
+def suchfunktionen_formular(kontoid):
+    print(f"kontoid: {kontoid}")
+    email = session.get('email')
+    suchfunktion_ausgabe =[]
+    if request.method == 'POST':
+        print(f"if Bedingung ist durch")
+        stichwort = request.form.get('stichwort')
+        startDate = request.form.get('startDate')
+        endDate = request.form.get('endDate')
+        betrag = request.form.get('betrag')
+        empfaenger = request.form.get('empfaenger')
+        suchfunktion_ausgabe = ergebnis_suchfunktion(email[0], kontoid, stichwort, startDate, endDate, betrag, empfaenger)
+
+    return render_template('suchfunktionen_formular.html', kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe)
 
 if __name__ == '__main__':
     app.run()
