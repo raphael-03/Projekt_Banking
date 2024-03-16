@@ -142,7 +142,6 @@ def suchfunktionen_formular(kontoid):
     email = session.get('email')
     suchfunktion_ausgabe =[]
     if request.method == 'POST':
-        print(f"if Bedingung ist durch")
         stichwort = request.form.get('stichwort')
         startDate = request.form.get('startDate')
         endDate = request.form.get('endDate')
@@ -150,7 +149,7 @@ def suchfunktionen_formular(kontoid):
         empfaenger = request.form.get('empfaenger')
         suchfunktion_ausgabe = ergebnis_suchfunktion(email[0], kontoid, stichwort, startDate, endDate, betrag, empfaenger)
         ergebnis_summe = suchfunktion_ausgabe[1][0]
-        print(ergebnis_summe)
+
 
     return render_template('suchfunktionen_formular.html', kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
 
