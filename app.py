@@ -149,8 +149,10 @@ def suchfunktionen_formular(kontoid):
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
         suchfunktion_ausgabe = ergebnis_suchfunktion(email[0], kontoid, stichwort, startDate, endDate, betrag, empfaenger)
+        ergebnis_summe = suchfunktion_ausgabe[1][0]
+        print(ergebnis_summe)
 
-    return render_template('suchfunktionen_formular.html', kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe)
+    return render_template('suchfunktionen_formular.html', kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
 
 if __name__ == '__main__':
     app.run()

@@ -144,34 +144,39 @@ def kategorien_erstellen_2(email, name, schlagwoerter):
 def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
     # Grundlegende SQL-Abfrage
     sql_query = "SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s "
-
+    sql_query_summe = "SELECT SUM(betrag) as Summe FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s "
     # Liste für die Parameter der Abfrage
     params = [email, kontoid]
     print(f"1{params}")
     # Bedingung für Verwendungszweck hinzufügen, falls vorhanden
     if stichwort:
         sql_query += "AND verwendungszweck = %s "
+        sql_query_summe += "AND verwendungszweck = %s "
         params.append(f'{stichwort}')
         print(f"2{params}")
 
     # Datumsbereich zur Abfrage hinzufügen, wenn beide Daten vorhanden sind
     if startDate and endDate:
         sql_query += "AND zeitstempel BETWEEN %s AND %s "
+        sql_query_summe += "AND zeitstempel BETWEEN %s AND %s "
         params.extend([startDate, endDate])
         print(f"3{params}")
 
     # Bedingung für betrag hinzufügen, wenn ein gültiger Wert angegeben ist
     if betrag not in [None, '', '0']:  # Angenommen, '0' ist ein ungültiger Wert für betrag
         sql_query += "AND betrag = %s "
+        sql_query_summe += "AND betrag = %s "
         params.append(betrag)
         print(f"4{params}")
 
     # Bedingung für empfaenger hinzufügen
     if empfaenger:  # Nur hinzufügen, wenn empfaenger nicht leer ist
         sql_query += "AND Name_Empfaenger = %s "
+        sql_query_summe += "AND Name_Empfaenger = %s "
         params.extend([f'{empfaenger}'])
         print(f"5{params}")
 
     # SQL-Abfrage ausführen
     erg_suchfunktion = execute_sql(sql_query, tuple(params), fetch=True)
-    return erg_suchfunktion
+    erg_summe = execute_sql(sql_query_summe, tuple(params), fetch=True)
+    return erg_suchfunktion, erg_summe
