@@ -140,20 +140,6 @@ def kategorien_erstellen_2(email, name, schlagwoerter):
     return email
 
 #suchfunktion
-"""
-def ergebnis_suchfunktion(email, kontoid,stichwort, startDate, endDate, betrag, empfaenger ):
-    erg_suchfunktion = execute_sql("SELECT * FROM kontoeintrag LEFT JOIN kategorien  ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email =%s "
-                                   "AND kontoeintrag.kontoid=%s (verwendungszweck ILIKE %s OR %s = '') "
-                                   "AND (wertstellungsdatum BETWEEN %s AND %s OR (%s = '' OR %s = '')) "
-                                   "AND (betrag = %s OR %s = '')"
-                                    "AND (empfaenger ILIKE %s OR %s = '')",(email, kontoid, f'%{stichwort}%', stichwort, startDate, endDate, startDate, endDate, betrag, betrag, f'%{empfaenger}%', empfaenger,))
-    return erg_suchfunktion, print(erg_suchfunktion)
-"""
-"""
-def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
-    erg_suchfunktion = execute_sql("SELECT * FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s AND (verwendungszweck ILIKE %s OR %s = '') AND (Zeitstempel BETWEEN %s AND %s OR %s = '' OR %s = '') AND (betrag = %s OR %s = '') AND (empfaenger ILIKE %s OR %s = '') ", (email, kontoid, f'%{stichwort}%', stichwort, startDate, endDate, startDate, endDate, betrag, betrag, f'%{empfaenger}%', empfaenger))
-    return erg_suchfunktion, print(erg_suchfunktion)
-"""
 
 def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
     # Grundlegende SQL-Abfrage
