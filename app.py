@@ -2,7 +2,7 @@ from flask import Flask,flash, Response, render_template, request, redirect, url
 import re
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -179,7 +179,8 @@ def upload_excel(name):
             df = pd.read_excel(file, usecols=['Zeitstempel', 'Betrag', 'Empfaenger', 'Verwendungszweck'])
             # Daten in die Datenbank einfügen
             print(df)
-
+            uploud =insert_into_database(df)
+            print(uploud)
             flash('Datei erfolgreich hochgeladen und in die Datenbank eingefügt')
             return redirect(url_for('konto_uebersicht', name=name))
 
