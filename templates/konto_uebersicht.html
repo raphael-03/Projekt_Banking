@@ -34,7 +34,7 @@
     <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege={{ anzahl_eintraege + 15 }}" class="button">15 Weitere Einträge anzeigen</a>
     <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege=-1" class="button">Alle Einträge zeigen</a>
     </form>
-   <form action="/upload_excel/{{ name }}" method="POST" enctype="multipart/form-data">
+   <form action="/upload_excel/{{ name }}/{{ kontoid[0] }}" method="POST" enctype="multipart/form-data">
         <input type="file" name="excel_file" accept=".xlsx">
         <input type="submit" value="Datei hochladen">
     </form>
