@@ -1,0 +1,66 @@
+/* benutzer_uebersicht.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+form {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.button {
+    background-color: #8a2be2; /* Lila */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 5px;
+    display: inline-block;
+}
+
+.button:hover {
+    background-color: #7b1fa2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stärkerer Schatten beim Hover */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #8a2be2;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+/* Stil für "Keine Kategorie zugewiesen" */
+td:not(:empty) {
+    color: #666; /* Dunkelgrau für normalen Text */
+}
+
+td:empty:before {
+    content: "Keine Kategorie zugewiesen";
+    color: #999; /* Hellgrau für "Keine Kategorie zugewiesen" */
+}
