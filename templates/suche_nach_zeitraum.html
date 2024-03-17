@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abfrage der Kontoeinträge</title>
+</head>
+<body>
+    <h2>Wählen Sie die Zeitspanne für die Abfrage:</h2>
+    <form action="/sortieren_zeitraum" method='POST'>
+        <a href="/profil_page" class="button">Profil Übersicht</a>
+        <br>
+        <select name="zeitspanne">
+            <option value="monatlich">Monatlich</option>
+            <option value="jaehrlich">Jährlich</option>
+            <option value="benutzerdefiniert">Benutzerdefiniert</option>
+        </select>
+        <br>
+        Startdatum: <input type="date" name="start_date">
+        <br>
+        Enddatum: <input type="date" name="end_date">
+        <br>
+        <input type="submit" value="Abfragen">
+
+ {% if query %}
+        <h3>Ergebnisse:</h3>
+        <table>
+            <tr>
+                <th>Kontoeintrag ID</th>
+                <th>Zeitstempel</th>
+                <th>Betrag</th>
+                <th>Name Empfänger</th>
+                <th>Verwendungszweck</th>
+                <th>Kategorien ID</th>
+                <th>E-Mail</th>
+            </tr>
+            {% for eintrag in query %}
+            <tr>
+                <td>{{ eintrag[0] }}</td>
+                <td>{{ eintrag[1] }}</td>
+                <td>{{ eintrag[2] }}</td>
+                <td>{{ eintrag[3] }}</td>
+                <td>{{ eintrag[4] }}</td>
+                <td>{{ eintrag[5] }}</td>
+                <td>{{ eintrag[6] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    </form>
+</body>
+</html>

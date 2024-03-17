@@ -233,3 +233,22 @@ def sortieren_nach_kategorien(email, kontoid):
 def get_kategorie_summen(email, kontoid):
     kategorie_summe = execute_sql(" SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, SUM(ke.Betrag) AS Gesamtsumme FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s GROUP BY Kategorie ORDER BY Gesamtsumme DESC", (email,kontoid,), fetch=True)
     return kategorie_summe
+
+def get_zeitraum(zeitspanne, start_date, end_date, email, kontoid):
+    parameters = [email, kontoid]  # Parameter für die Abfrage
+    base_query = "SELECT * FROM kontoeintrag WHERE email = %s AND kontoid = %s "
+
+    if zeitspanne == 'monatlich':
+        # Monatliche Abfrage
+        query = base_query + "AND DATE_TRUNC('month', zeitstempel) = DATE_TRUNC('month', CURRENT_DATE)"
+    elif zeitspanne == 'jaehrlich':
+        # Jährliche Abfrage
+        query = base_query + "AND DATE_TRUNC('year', zeitstempel) = DATE_TRUNC('year', CURRENT_DATE)"
+    elif zeitspanne == 'benutzerdefiniert' and start_date and end_date:
+        # Benutzerdefinierte Zeitspanne
+        query = base_query + "AND zeitstempel BETWEEN %s AND %s"
+        parameters += [start_date, end_date]  # Hinzufügen der Start- und Enddaten zu den Parametern
+    else:
+        return "Ungültige Auswahl.", []
+
+    return query, parameters

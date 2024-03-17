@@ -4,7 +4,7 @@ import hashlib, io
 import base64
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database, sortieren_nach_kategorien
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database, sortieren_nach_kategorien, get_zeitraum
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -238,19 +238,29 @@ def visualisierung_konto_eintraege(email, kontoid):
 def erstelle_kreisdiagramm(data):
     # Kategorienamen und ihre Gesamtsummen extrahieren
     kategorien, summen = zip(*data)
-
     # Kreisdiagramm erstellen
     fig, ax = plt.subplots()
     ax.pie(summen, labels=kategorien, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  # Sorgt dafür, dass das Diagramm kreisförmig wird
-
-    # Das Diagramm in einen BytesIO-Stream speichern
+    ax.axis('equal')
     buf = io.BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight')
     buf.seek(0)
-
-    # BytesIO-Stream zurückgeben
     return buf
+
+#sortieren nach monatlich, jahrlich, oder zu einer benutzerde nierten Zeitspanne
+@app.route('/suche_nach_zeitraum/<kontoid>', methods=['GET', 'POST'])
+def sortieren_zeitraum(kontoid):
+    email = session.get('email')
+    if request.method == 'POST':
+        zeitspanne = request.form.get('zeitspanne')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        email = request.form.get('email')
+        kontoid = request.form.get('kontoid')
+
+        query = get_zeitraum(zeitspanne, start_date, end_date, email, kontoid)
+        return render_template('suche_nach_zeitraum.html', query=query)
+    return render_template('suche_nach_zeitraum.html', email=email, kontoid=kontoid)
 
 
 if __name__ == '__main__':
