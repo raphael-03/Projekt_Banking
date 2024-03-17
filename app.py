@@ -89,6 +89,7 @@ def kontos_anzeigen(email):
     konto_anzeige = konto_anzeigen(email)
     return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige)
 
+# Funktion um ein Konto zu erstellen
 @app.route('/konto_erstellen', methods=['GET','POST'])
 def konto_erstellen():
     if request.method == 'POST':
@@ -106,6 +107,8 @@ def konto_waehlen(name):
         return redirect(url_for('kontoauszug_anlegen', kontoid=kontoid))
     else:
         return "Konto nicht gefunden", 404
+
+# Funtkion um ein Eintrag zu erstellen
 @app.route('/kontoauszug_anlegen/<kontoid>/<name>', methods=[ 'GET','POST'])
 def kontoauszug_anlegen(kontoid, name):
     print(f"Route aufgerufen mit kontoid: {kontoid}")
