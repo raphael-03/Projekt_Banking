@@ -12,8 +12,9 @@ app.secret_key = 'AhmetundRaphael'
 def startseite():
     return render_template("startseite.html")
 
+# Erstellt einen SHA256 Hash des Passworts
 def hash_password(password):
-    """Erstellt einen SHA256 Hash des Passworts."""
+
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
     return hashed_password
 
@@ -60,6 +61,9 @@ def login():
 
             if provided_password_hash == user['hashed_password']:
                 # Implementiere Sitzungslogik hier
+                session['logged_in'] = user['email']
+                session['is_logged_in'] = True
+                print('Logged in successfully!')
                 return redirect(url_for('profil_page'))
             else:
                 return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
@@ -73,8 +77,11 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    vorname = logout_user(session.get('email'))[0]
+    email = session.get('email')
+    print(email)
+    vorname = logout_user(email)
     session.pop('email', None)
+    session.pop('is_logged_in', None)
     return render_template('logout_page.html', vorname=vorname)
 
 #Dies ist hier die Übersicht nach dem Login
@@ -108,7 +115,7 @@ def konto_erstellen():
     if request.method == 'POST':
         name = request.form.get('create_konto')
         email = session.get('email')
-        konto_anlegen(name, email[0], )
+        konto_anlegen(name, email, )
         return redirect(url_for('kontos_anzeigen', email=email[0]))
     return render_template('create_konto.html')
 
@@ -191,8 +198,11 @@ def upload_excel(name, kontoid):
             # Nur bestimmte Spalten aus der Excel-Datei lesen
             df = pd.read_excel(file, usecols=['Zeitstempel', 'Betrag', 'Empfaenger', 'Verwendungszweck'])
             # Daten in die Datenbank einfügen
-            uploud =insert_into_database(df,email, kontoid)
+            insert_into_database(df,email, kontoid)
+
             flash('Datei erfolgreich hochgeladen und in die Datenbank eingefügt')
+            return redirect(url_for('konto_uebersicht', name=name, kontoid=kontoid, email=email))
+        else:
             return redirect(url_for('konto_uebersicht', name=name, kontoid=kontoid, email=email))
 
 def allowed_file(filename):

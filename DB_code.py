@@ -200,29 +200,6 @@ def excel_export(email,kontoid):
 
     return output
 # excel import SQL input
-"""
-def insert_into_database(df, email, kontoid):
-    for index, row in df.iterrows():
-       execute_sql("INSERT INTO kontoeintrag(Zeitstempel, betrag, name_empfaenger, verwendungszweck, email, kontoid) VALUES (%s, %s, %s, %s, %s, %s)",(row['Zeitstempel'],row['Betrag'], row['Empfaenger'], row['Verwendungszweck'],  email, kontoid))
-    pass
-"""
-"""
-def insert_into_database(df, email, kontoid):
-    for index, row in df.iterrows():
-        pruefe_nach_schlagwort = execute_sql(
-            "SELECT kategorien.kategorienid FROM kategorien JOIN schlagwoerter ON kategorien.kategorienid = schlagwoerter.kategorienid WHERE schlagwoerter.wort = %s OR schlagwoerter.wort = %s",
-            (row['Empfaenger'], row['Verwendungszweck']), fetch=True)
-        print(f"schlagwort{pruefe_nach_schlagwort}")
-        if pruefe_nach_schlagwort:
-            return execute_sql(
-                "INSERT INTO kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kategorienid, kontoid) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (row['Zeitstempel'],row['Betrag'], row['Empfaenger'], row['Verwendungszweck'], email, pruefe_nach_schlagwort[0], kontoid,))
-        else:
-            return execute_sql(
-                "INSERT INTO  kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kategorienid, kontoid) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (row['Zeitstempel'],row['Betrag'], row['Empfaenger'], row['Verwendungszweck'], email, None, kontoid,))
-
-"""
 def insert_into_database(df, email, kontoid):
     ergebnisse = []  # Zum Speichern der Ergebnisse oder Erfolgs-/Fehlermeldungen
     for index, row in df.iterrows():
