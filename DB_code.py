@@ -46,15 +46,20 @@ def register_user(vorname, nachname, email, alter, bankinstitut, password):
             (user_email[0][0], password)
         )
 
-
+"""
 def login_user(email, password):
     return execute_sql(
         "SELECT k.email FROM kunde k JOIN password p ON k.email = p.email WHERE k.email = %s AND p.password = %s",
         (email, password),
         fetch=True
     )
-
-
+"""
+def login_user(email):
+    return execute_sql(
+        "SELECT email, password FROM password WHERE email = %s;",
+        (email,),
+        fetch=True
+    )
 def logout_user(email):
     return execute_sql(
         "SELECT vorname FROM kunde WHERE email = %s",

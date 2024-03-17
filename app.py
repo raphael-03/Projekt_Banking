@@ -1,5 +1,6 @@
 from flask import Flask,flash, Response, render_template, request, redirect, url_for, session
 import re
+import hashlib
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
 from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database
@@ -11,9 +12,15 @@ app.secret_key = 'AhmetundRaphael'
 def startseite():
     return render_template("startseite.html")
 
-@app.route('/registrierung',methods=['GET', 'POST'])
+def hash_password(password):
+    """Erstellt einen SHA256 Hash des Passworts."""
+    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    return hashed_password
+
+@app.route('/registrierung', methods=['GET', 'POST'])
 def registrierung():
     if request.method == 'POST':
+        # Extrahiere Formulardaten
         vorname = request.form.get('vorname')
         nachname = request.form.get('nachname')
         email = request.form.get('email')
@@ -22,24 +29,18 @@ def registrierung():
         password = request.form.get('password')
         password_repeat = request.form.get('password_repeat')
 
+        # Einfache Passwort-Validierung
         error = None
-        if len(password) < 8:
-            error = 'Das Passwort muss mindestens 8 Zeichen lang sein.'
-        elif not re.search("[A-Z]", password):
-            error = 'Das Passwort muss mindestens einen Großbuchstaben enthalten.'
-        elif not re.search("[a-z]", password):
-            error = 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.'
-        elif re.match("^[^A-Za-z0-9].*|.*[^A-Za-z0-9]$", password) or not re.search("[^A-Za-z0-9]", password):
-            error = 'Das Passwort muss mindestens ein Sonderzeichen enthalten, das nicht am Anfang oder Ende steht.'
-        elif password != password_repeat:
+        if password != password_repeat:
             error = 'Passwörter stimmen nicht überein.'
 
         if error:
-            return render_template('registrierung.html', error=error, vorname=vorname, nachname=nachname,
-                                   email=email, alter=alter, bankinstitut=bankinstitut)
+            return render_template('registrierung.html', error=error)
         else:
-
-            register_user(vorname, nachname, email, alter, bankinstitut, password)
+            # Hash das Passwort
+            hashed_password = hash_password(password)
+            # Speichere den Benutzer mit dem gehashten Passwort
+            register_user(vorname, nachname, email, alter, bankinstitut, hashed_password)
             return redirect(url_for('startseite'))
 
     return render_template('registrierung.html')
@@ -50,14 +51,25 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        result = login_user(email, password)
-        if result:
-            session['email'] = result[0]
-            session['is_logged'] = True
-            return redirect(url_for('profil_page'))
+        # Annahme: login_user holt Benutzerdaten basierend auf der E-Mail
+        user_tuple_list = login_user(email)
+
+        if user_tuple_list:
+            user = {'email': user_tuple_list[0][0], 'hashed_password': user_tuple_list[0][1]}
+            provided_password_hash = hash_password(password)
+
+            if provided_password_hash == user['hashed_password']:
+                # Implementiere Sitzungslogik hier
+                return redirect(url_for('profil_page'))
+            else:
+                return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
         else:
-            return render_template("login.html", error="Passwort ist falsch oder Kunde existiert nicht",email=email)
+            return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
+
     return render_template('login.html')
+
+
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
