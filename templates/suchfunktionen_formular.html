@@ -28,7 +28,7 @@
 
 
             <button type="submit">Suche starten</button>
-        <h2>Gesamtsumme: {{ ergebnis_summe }}€</h2>
+        <h2>Gesamtsumme: {{ ergebnis_summe if ergebnis_summe != None else '0' }}€</h2>
         <table>
         <tr>
             <th>Zeitstempel</th>
@@ -39,11 +39,11 @@
         </tr>
         {% for eintrag in suchfunktion_ausgabe %}
             <tr>
-                <td>{{ eintrag[0][0] }}</td>
-                <td>{{ eintrag[0][1] }}€</td>
-                <td>{{ eintrag[0][2] }}</td>
-                <td>{{ eintrag[0][3] }}</td>
-                <td>{{ eintrag[0][4] if eintrag[0][4] != None else 'Keine Kategorie zugewiesen'  }}</td>
+                <td>{{ eintrag[0] }}</td>
+                <td>{{ eintrag[1] }}€</td>
+                <td>{{ eintrag[2] }}</td>
+                <td>{{ eintrag[3] }}</td>
+                <td>{{ eintrag[4] if eintrag[4] != None else 'Keine Kategorie zugewiesen'  }}</td>
             </tr>
         {% endfor %}
         </table>
