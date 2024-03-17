@@ -142,10 +142,9 @@ def kategorien_erstellen_2(email, name, schlagwoerter):
 #suchfunktion
 
 def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
-    # Grundlegende SQL-Abfrage
     sql_query = "SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s "
     sql_query_summe = "SELECT SUM(betrag) as Summe FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s "
-    # Liste für die Parameter der Abfrage
+
     params = [email, kontoid]
     # Bedingung für Verwendungszweck hinzufügen, falls vorhanden
     if stichwort:
@@ -172,7 +171,6 @@ def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag,
         sql_query_summe += "AND Name_Empfaenger = %s "
         params.extend([f'{empfaenger}'])
 
-    # SQL-Abfrage ausführen
     erg_suchfunktion = execute_sql(sql_query, tuple(params), fetch=True)
     erg_summe = execute_sql(sql_query_summe, tuple(params), fetch=True)
     return erg_suchfunktion, erg_summe
