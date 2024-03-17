@@ -57,11 +57,13 @@ def login():
 
         if user_tuple_list:
             user = {'email': user_tuple_list[0][0], 'hashed_password': user_tuple_list[0][1]}
+            print(user)
             provided_password_hash = hash_password(password)
 
             if provided_password_hash == user['hashed_password']:
                 # Implementiere Sitzungslogik hier
-                session['logged_in'] = user['email']
+                session['email'] = user['email']
+                print(user['email'])
                 session['is_logged_in'] = True
                 print('Logged in successfully!')
                 return redirect(url_for('profil_page'))
@@ -77,9 +79,8 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    email = session.get('email')
-    print(email)
-    vorname = logout_user(email)
+    print(session.get('email'))
+    vorname = logout_user(session.get('email'))[0]
     session.pop('email', None)
     session.pop('is_logged_in', None)
     return render_template('logout_page.html', vorname=vorname)
