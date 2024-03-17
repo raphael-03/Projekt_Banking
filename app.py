@@ -155,17 +155,17 @@ def suchfunktionen_formular(kontoid):
         ergebnis_summe = suchfunktion_ausgabe[1][0][0]
         return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
     return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid)
+
 @app.route('/ausfuehrung_export/<kontoid>', methods = ['GET', 'POST'])
 def ausfuehrung_export(kontoid):
     email = session.get('email')
     excel_file = excel_export(email,kontoid)
-
-
     return Response(excel_file.getvalue(),mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition": f"attachment;filename=Kontoeintraege_{kontoid}.xlsx"})
 
 # import der excel datei
-@app.route('/upload_excel', methods=['GET', 'POST'])
-def upload_excel():
+@app.route('/upload_excel/<name>', methods=['GET', 'POST'])
+def upload_excel(name):
+    print(f"Uploading Excel")
     if request.method == 'POST':
         if 'excel_file' not in request.files:
             flash('Keine Datei Teil der Anfrage')
@@ -178,9 +178,10 @@ def upload_excel():
             # Nur bestimmte Spalten aus der Excel-Datei lesen
             df = pd.read_excel(file, usecols=['Zeitstempel', 'Betrag', 'Empfaenger', 'Verwendungszweck'])
             # Daten in die Datenbank einfügen
-            insert_into_database(df)
+            print(df)
+
             flash('Datei erfolgreich hochgeladen und in die Datenbank eingefügt')
-            return redirect(url_for('upload_excel'))
+            return redirect(url_for('konto_uebersicht', name=name))
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xlsx'}
