@@ -1,6 +1,7 @@
 import psycopg2
 import os
-
+import pandas as pd
+import io
 
 def get_db_connection():
     host = "localhost"
@@ -174,3 +175,22 @@ def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag,
     erg_suchfunktion = execute_sql(sql_query, tuple(params), fetch=True)
     erg_summe = execute_sql(sql_query_summe, tuple(params), fetch=True)
     return erg_suchfunktion, erg_summe
+
+# Excel export
+def excel_export(email,kontoid):
+    sql_excel =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag LEFT JOIN kategorien ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s AND kontoeintrag.kontoid = %s ORDER BY zeitstempel", (email, kontoid),fetch=True)
+    # Wandeln Sie das Ergebnis in ein pandas DataFrame um
+    df = pd.DataFrame(sql_excel)
+
+    # Erstellen eines BytesIO-Objekts als Zwischenspeicher
+    output = io.BytesIO()
+
+    # Erstellen der Excel-Datei im Speicher
+    with pd.ExcelWriter(output, engine='openpyxl', mode='w') as writer:
+        df.to_excel(writer, sheet_name='Sheet1')
+        # Hinweis: Der Aufruf von writer.save() ist hier nicht erforderlich
+
+    # Zurücksetzen des Cursors im BytesIO-Objekt
+    output.seek(0)
+
+    return output

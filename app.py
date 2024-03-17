@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, Response, render_template, request, redirect, url_for, session
 import re
+import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -154,6 +155,12 @@ def suchfunktionen_formular(kontoid):
         ergebnis_summe = suchfunktion_ausgabe[1][0][0]
         return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
     return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid)
+@app.route('/ausfuehrung_export/<kontoid>', methods = ['GET', 'POST'])
+def ausfuehrung_export(kontoid):
+    email = session.get('email')
+    excel_file = excel_export(email,kontoid)
 
+
+    return Response(excel_file.getvalue(),mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition": f"attachment;filename=Kontoeintraege_{kontoid}.xlsx"})
 if __name__ == '__main__':
     app.run()
