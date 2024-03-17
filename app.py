@@ -51,17 +51,13 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-
-        # Annahme: login_user holt Benutzerdaten basierend auf der E-Mail
         user_tuple_list = login_user(email)
-
         if user_tuple_list:
             user = {'email': user_tuple_list[0][0], 'hashed_password': user_tuple_list[0][1]}
             print(user)
             provided_password_hash = hash_password(password)
 
             if provided_password_hash == user['hashed_password']:
-                # Implementiere Sitzungslogik hier
                 session['email'] = user['email']
                 print(user['email'])
                 session['is_logged_in'] = True
@@ -71,12 +67,7 @@ def login():
                 return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
         else:
             return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
-
     return render_template('login.html')
-
-
-
-
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     print(session.get('email'))
@@ -105,8 +96,9 @@ def konto_uebersicht(name):
     return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name, kontoid=kontid, anzahl_eintraege=anzahl_eintraege)
 
 
-@app.route('/konto_anzeigen/<email>', methods=['GET', 'POST'])
-def kontos_anzeigen(email):
+@app.route('/konto_anzeigen', methods=['GET', 'POST'])
+def kontos_anzeigen():
+    email = session.get('email')
     konto_anzeige = konto_anzeigen(email)
     return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige)
 
@@ -116,8 +108,8 @@ def konto_erstellen():
     if request.method == 'POST':
         name = request.form.get('create_konto')
         email = session.get('email')
-        konto_anlegen(name, email, )
-        return redirect(url_for('kontos_anzeigen', email=email[0]))
+        konto_anlegen(name, email )
+        return redirect(url_for('kontos_anzeigen', email=email))
     return render_template('create_konto.html')
 
 @app.route('/konto_waehlen/<name>')
