@@ -140,7 +140,8 @@ def kategorien_uebersicht(email):
 def suchfunktionen_formular(kontoid):
     print(f"kontoid: {kontoid}")
     email = session.get('email')
-    suchfunktion_ausgabe =[]
+    suchfunktion_ausgabe = []
+    ergebnis_summe = []
     if request.method == 'POST':
         stichwort = request.form.get('stichwort')
         startDate = request.form.get('startDate')
@@ -148,10 +149,9 @@ def suchfunktionen_formular(kontoid):
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
         suchfunktion_ausgabe = ergebnis_suchfunktion(email[0], kontoid, stichwort, startDate, endDate, betrag, empfaenger)
-        ergebnis_summe = suchfunktion_ausgabe[1][0]
-
-
-    return render_template('suchfunktionen_formular.html', kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
+        print(f"Route{suchfunktion_ausgabe[0]}")
+        ergebnis_summe = suchfunktion_ausgabe[1][0][0]
+    return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe, ergebnis_summe=ergebnis_summe)
 
 if __name__ == '__main__':
     app.run()

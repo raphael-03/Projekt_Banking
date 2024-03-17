@@ -45,7 +45,7 @@ CREATE TABLE kategorien(
 cur.execute("""
 CREATE TABLE Kontoeintrag (
     kontoeintragid SERIAL PRIMARY KEY,
-    Zeitstempel date,
+    Zeitstempel TIMESTAMP,
     Betrag decimal,
     Name_Empfaenger varchar(100),
     Verwendungszweck varchar(100),

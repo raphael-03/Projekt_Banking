@@ -6,6 +6,8 @@
 </head>
 <body>
     <h2>Suche in deinem Konto</h2>
+    <a href="/profil_page" class="button">Profilseite</a>
+    <a href="/konto_anzeigen/{{ email[0] }}" class="button">Konto Übersicht</a>
     <form action="/suchfunktionen_formular/{{ kontoid }}" method='POST'>
 
             <label for="stichwort">Stichwort im Verwendungszweck:</label>
@@ -26,7 +28,7 @@
 
 
             <button type="submit">Suche starten</button>
-        <h2>Gesamtsumme: {{ ergebnis_summe[0] }}€</h2>
+        <h2>Gesamtsumme: {{ ergebnis_summe }}€</h2>
         <table>
         <tr>
             <th>Zeitstempel</th>
@@ -37,11 +39,11 @@
         </tr>
         {% for eintrag in suchfunktion_ausgabe %}
             <tr>
-                <td>{{ eintrag[0] }}</td>
-                <td>{{ eintrag[1] }}€</td>
-                <td>{{ eintrag[2] }}</td>
-                <td>{{ eintrag[3] }}</td>
-                <td>{{ eintrag[4] if eintrag[4] != None else 'Keine Kategorie zugewiesen'  }}</td>
+                <td>{{ eintrag[0][0] }}</td>
+                <td>{{ eintrag[0][1] }}€</td>
+                <td>{{ eintrag[0][2] }}</td>
+                <td>{{ eintrag[0][3] }}</td>
+                <td>{{ eintrag[0][4] if eintrag[0][4] != None else 'Keine Kategorie zugewiesen'  }}</td>
             </tr>
         {% endfor %}
         </table>
