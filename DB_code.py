@@ -194,3 +194,9 @@ def excel_export(email,kontoid):
     output.seek(0)
 
     return output
+# excel import SQL input
+
+def insert_into_database(df):
+    for index, row in df.iterrows():
+       execute_sql("INSERT INTO kontoeintrag(Zeitstempel, Verwendungszweck, Betrag, Empfaenger) VALUES (%s, %s, %s, %s)",(row['Zeitstempel'],row['Betrag'], row['Empfaenger'], row['Verwendungszweck']))
+    pass

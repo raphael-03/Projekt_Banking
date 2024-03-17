@@ -14,6 +14,11 @@
     <!-- Beispiel für einen Download-Button in einer HTML-Vorlage -->
     <a href="/ausfuehrung_export/{{ kontoid[0] }}" class="btn btn-primary">Excel herunterladen</a>
 
+    <form action="/upload_excel" method="post" enctype="multipart/form-data">
+        <input type="file" name="excel_file" accept=".xlsx">
+        <input type="submit" value="Datei hochladen">
+    </form>
+
         <table>
           <tr>
             <th>zeitstempel</th>

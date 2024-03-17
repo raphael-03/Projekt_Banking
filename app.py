@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request, redirect, url_for, session
+from flask import Flask,flash, Response, render_template, request, redirect, url_for, session
 import re
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
@@ -162,5 +162,29 @@ def ausfuehrung_export(kontoid):
 
 
     return Response(excel_file.getvalue(),mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition": f"attachment;filename=Kontoeintraege_{kontoid}.xlsx"})
+
+# import der excel datei
+@app.route('/upload_excel', methods=['GET', 'POST'])
+def upload_excel():
+    if request.method == 'POST':
+        if 'excel_file' not in request.files:
+            flash('Keine Datei Teil der Anfrage')
+            return redirect(request.url)
+        file = request.files['excel_file']
+        if file.filename == '':
+            flash('Keine ausgewählte Datei')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            # Nur bestimmte Spalten aus der Excel-Datei lesen
+            df = pd.read_excel(file, usecols=['Zeitstempel', 'Betrag', 'Empfaenger', 'Verwendungszweck'])
+            # Daten in die Datenbank einfügen
+            insert_into_database(df)
+            flash('Datei erfolgreich hochgeladen und in die Datenbank eingefügt')
+            return redirect(url_for('upload_excel'))
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xlsx'}
+
+
 if __name__ == '__main__':
     app.run()
