@@ -1,9 +1,10 @@
 from flask import Flask,flash, Response, render_template, request, redirect, url_for, session
-import re
-import hashlib
+import matplotlib.pyplot as plt
+import hashlib, io
+import base64
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database, sortieren_nach_kategorien
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -200,6 +201,56 @@ def upload_excel(name, kontoid):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xlsx'}
+
+
+#Kontoeinträge Visuell darstellen
+@app.route('/visualisierung_konto_eintraege/<email>/<kontoid>', methods=['GET', 'POST'])
+def visualisierung_konto_eintraege(email, kontoid):
+    eintraege = sortieren_nach_kategorien(email, kontoid)
+    kategorisierte_eintraege = {}
+    gesamtsummen = {}
+
+    # Kategorisierte Einträge sammeln und Summen berechnen
+    for eintrag in eintraege:
+        kategorie = eintrag[0]
+        if kategorie not in kategorisierte_eintraege:
+            kategorisierte_eintraege[kategorie] = []
+            gesamtsummen[kategorie] = 0
+        kategorisierte_eintraege[kategorie].append(eintrag[1:])
+        gesamtsummen[kategorie] += eintrag[2]  # Angenommen, das Betragsfeld ist das dritte in jedem Eintrag
+
+    # Kreisdiagramm für Kategoriesummen erstellen
+    labels = gesamtsummen.keys()
+    sizes = gesamtsummen.values()
+
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')
+
+    # Diagramm in einen BytesIO-Stream speichern
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    img_url = 'data:image/png;base64,' + base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Visualisierung und kategorisierte Einträge an die Vorlage senden
+    return render_template('visualisierung_konto_eintraege.html', kategorisierte_eintraege=kategorisierte_eintraege, email=email, img_url=img_url, kontoid=kontoid)
+def erstelle_kreisdiagramm(data):
+    # Kategorienamen und ihre Gesamtsummen extrahieren
+    kategorien, summen = zip(*data)
+
+    # Kreisdiagramm erstellen
+    fig, ax = plt.subplots()
+    ax.pie(summen, labels=kategorien, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')  # Sorgt dafür, dass das Diagramm kreisförmig wird
+
+    # Das Diagramm in einen BytesIO-Stream speichern
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+
+    # BytesIO-Stream zurückgeben
+    return buf
 
 
 if __name__ == '__main__':

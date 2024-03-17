@@ -223,3 +223,13 @@ def insert_into_database(df, email, kontoid):
 
     # Hier könnten Sie ergebnisse zurückgeben oder verarbeiten, falls nötig
     return ergebnisse
+
+#visualiserung der EInträge
+
+def sortieren_nach_kategorien(email, kontoid):
+    eintraege = execute_sql("SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, ke.Zeitstempel, ke.Betrag, ke.Name_Empfaenger, ke.Verwendungszweck FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s ORDER BY Kategorie, ke.Zeitstempel", (email, kontoid,), fetch=True)
+    return eintraege
+
+def get_kategorie_summen(email, kontoid):
+    kategorie_summe = execute_sql(" SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, SUM(ke.Betrag) AS Gesamtsumme FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s GROUP BY Kategorie ORDER BY Gesamtsumme DESC", (email,kontoid,), fetch=True)
+    return kategorie_summe

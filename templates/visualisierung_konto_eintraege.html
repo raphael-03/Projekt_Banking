@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>visualisierung derkonto_einträge</title>
+</head>
+<body>
+    <form action="/visualisierung_konto_eintraege", method='POST'>
+           <h1>Kontoeinträge </h1>
+    {% for kategorie, eintraege in kategorisierte_eintraege.items() %}
+        <h2>{{ kategorie }}</h2>
+        <table>
+            <tr>
+                <th>Zeitstempel</th>
+                <th>Betrag</th>
+                <th>Name Empfänger</th>
+                <th>Verwendungszweck</th>
+            </tr>
+            {% for eintrag in eintraege %}
+            <tr>
+                <td>{{ eintrag[0] }}</td>
+                <td>{{ eintrag[1] }}</td>
+                <td>{{ eintrag[2] }}</td>
+                <td>{{ eintrag[3] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+    <img src="{{ img_url }}" alt="Kreisdiagramm der Kategoriesummen">
+    </form>
+</body>
+</html>
