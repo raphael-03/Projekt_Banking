@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Neuen Kontoauszug anlegen</title>
-    <link rel="stylesheet" href="../static/create_kontoeintrag.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'create_kontoeintrag.css')}}">
 </head>
 <body>
-    <h1>Neuen Kontoauszug anlegen</h1>
-    <a href="/profil_page" class="button">Profilseite</a>
     <form action="/kontoauszug_anlegen/{{ kontoid }}/{{ name }}" method='POST'>
-
+    <h1>Neuen Kontoauszug anlegen</h1>
+        <a href="/profil_page" class="button">Profilseite</a>
         <label for="zeitstempel">Zeitstempel</label>
         <input type="datetime-local" id="zeitstempel" name="zeitstempel" required><br><br>
 

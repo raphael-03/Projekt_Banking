@@ -8,9 +8,17 @@ body {
     align-items: center;
     min-height: 100vh;
 }
+form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+}
 
 h1 {
-    color: #8a2be2;
+    color: black;
 }
 
 .form-container {
