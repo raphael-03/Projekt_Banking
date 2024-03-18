@@ -205,7 +205,7 @@ def insert_into_database(df, email, kontoid):
         ergebnisse.append(ergebnis)
     return ergebnisse
 
-#visualiserung der EInträge
+#visualiserung der Einträge
 
 def sortieren_nach_kategorien(email, kontoid, jahr=None, monat=None, start_datum=None, ende_datum=None):
     base_query = "SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, ke.Zeitstempel, ke.Betrag, ke.Name_Empfaenger, ke.Verwendungszweck FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s"

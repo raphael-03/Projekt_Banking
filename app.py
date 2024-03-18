@@ -245,17 +245,6 @@ def visualisierung_konto_eintraege(email, kontoid):
 
     # Visualisierung und kategorisierte Einträge an die Vorlage senden
     return render_template('visualisierung_konto_eintraege.html', kategorisierte_eintraege=kategorisierte_eintraege, email=email, img_url=img_url, kontoid=kontoid, name=name)
-def erstelle_kreisdiagramm(data):
-    # Kategorienamen und ihre Gesamtsummen extrahieren
-    kategorien, summen = zip(*data)
-    # Kreisdiagramm erstellen
-    fig, ax = plt.subplots()
-    ax.pie(summen, labels=kategorien, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-    return buf
 
 if __name__ == '__main__':
     app.run()
