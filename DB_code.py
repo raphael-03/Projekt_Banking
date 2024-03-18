@@ -121,12 +121,21 @@ def kategorien_erstellen_2(email, name, schlagwoerter):
         for wort in schlagwoerter:
             print(f"2{wort}")
             execute_sql("INSERT INTO schlagwoerter(kategorienid, wort) VALUES (%s, %s)", (kategorienid, wort))
+            kategorie_zu_kontoeintraegen_zuordnen(kategorienid, schlagwoerter)
         return email, print("fertig")
     else:
         print("Fehler")
 
     return email
 
+# Wenn eine neue Kategorie erstellt wird, werden die Kontoeinträge überprüft, ob sie der neuen Kategorie zugeordnet werden können
+def kategorie_zu_kontoeintraegen_zuordnen(kategorienid, schlagwoerter):
+    for wort in schlagwoerter:
+        # Wir suchen nach Kontoeinträgen, deren Verwendungszweck eines der Schlagwörter enthält
+        eintraege = execute_sql("SELECT kontoeintragid FROM Kontoeintrag WHERE Verwendungszweck LIKE %s", ('%' + wort + '%',), fetch=True)
+        for eintrag in eintraege:
+            # Aktualisieren den Kontoeintrag mit der kategorienid
+            execute_sql("UPDATE Kontoeintrag SET kategorienid=%s WHERE kontoeintragid=%s", (kategorienid, eintrag[0]))
 #suchfunktion
 
 def ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger):
