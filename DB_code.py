@@ -192,8 +192,7 @@ def insert_into_database(df, email, kontoid):
             (row['Empfaenger'], row['Verwendungszweck']), fetch=True)
 
         if pruefe_nach_schlagwort:
-            kategorienid = pruefe_nach_schlagwort[0][
-                0]  # Annahme, dass pruefe_nach_schlagwort eine Liste von Tupeln ist
+            kategorienid = pruefe_nach_schlagwort[0][0]
             ergebnis = execute_sql(
                 "INSERT INTO kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kategorienid, kontoid) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                 (row['Zeitstempel'], row['Betrag'], row['Empfaenger'], row['Verwendungszweck'], email, kategorienid,

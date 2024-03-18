@@ -157,7 +157,8 @@ def suchfunktionen_formular(kontoid):
         endDate = request.form.get('endDate')
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
-        suchfunktion_ausgabe = ergebnis_suchfunktion(email[0], kontoid, stichwort, startDate, endDate, betrag, empfaenger)
+        print(email)
+        suchfunktion_ausgabe = ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger)
         print(f"Route{suchfunktion_ausgabe[0]}")
         ergebnis_summe = suchfunktion_ausgabe[1][0][0]
         return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
