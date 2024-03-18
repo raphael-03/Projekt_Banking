@@ -161,7 +161,7 @@ def kategorien_uebersicht(email):
 #Raphael
 @app.route('/suchfunktionen_formular/<kontoid>', methods=['GET', 'POST'])
 def suchfunktionen_formular(kontoid):
-    print(f"kontoid: {kontoid}")
+
     email = session.get('email')
     if request.method == 'POST':
         stichwort = request.form.get('stichwort')
@@ -169,9 +169,9 @@ def suchfunktionen_formular(kontoid):
         endDate = request.form.get('endDate')
         betrag = request.form.get('betrag')
         empfaenger = request.form.get('empfaenger')
-        print(email)
+
         suchfunktion_ausgabe = ergebnis_suchfunktion(email, kontoid, stichwort, startDate, endDate, betrag, empfaenger)
-        print(f"Route{suchfunktion_ausgabe[0]}")
+
         ergebnis_summe = suchfunktion_ausgabe[1][0][0]
         return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
     return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid)

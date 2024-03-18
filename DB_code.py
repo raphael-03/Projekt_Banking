@@ -66,8 +66,8 @@ def pruefe_konto(email):
     return False
 
 def create_kontoauszug_anlegen(Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kontoid):
-    pruefe_nach_schlagwort = execute_sql("SELECT kategorien.kategorienid FROM kategorien JOIN schlagwoerter ON kategorien.kategorienid = schlagwoerter.kategorienid WHERE schlagwoerter.wort = %s OR schlagwoerter.wort = %s",
-                                         (Name_Empfaenger, Verwendungszweck), fetch=True)
+    pruefe_nach_schlagwort = execute_sql("SELECT kategorien.kategorienid FROM kategorien JOIN schlagwoerter ON kategorien.kategorienid = schlagwoerter.kategorienid WHERE (schlagwoerter.wort = %s OR schlagwoerter.wort = %s) AND kategorien.email = %s",
+                                         (Name_Empfaenger, Verwendungszweck, email), fetch=True)
     if pruefe_nach_schlagwort:
         return execute_sql("INSERT INTO kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kategorienid, kontoid) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                            (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email,pruefe_nach_schlagwort[0], kontoid,))
@@ -199,8 +199,8 @@ def insert_into_database(df, email, kontoid):
     ergebnisse = []  # Zum Speichern der Ergebnisse oder Erfolgs-/Fehlermeldungen
     for index, row in df.iterrows():
         pruefe_nach_schlagwort = execute_sql(
-            "SELECT kategorien.kategorienid FROM kategorien JOIN schlagwoerter ON kategorien.kategorienid = schlagwoerter.kategorienid WHERE schlagwoerter.wort = %s OR schlagwoerter.wort = %s",
-            (row['Empfaenger'], row['Verwendungszweck']), fetch=True)
+            "SELECT kategorien.kategorienid FROM kategorien JOIN schlagwoerter ON kategorien.kategorienid = schlagwoerter.kategorienid WHERE (schlagwoerter.wort = %s OR schlagwoerter.wort = %s) AND kategorien.email =%s",
+            (row['Empfaenger'], row['Verwendungszweck'], email), fetch=True)
 
         if pruefe_nach_schlagwort:
             kategorienid = pruefe_nach_schlagwort[0][0]
