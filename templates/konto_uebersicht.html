@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="../static/konto_uebersicht.css">
 </head>
 <body>
+<h1>Konto Übersicht</h1>
+   <form action="/upload_excel/{{ name }}/{{ kontoid[0] }}" method="POST" enctype="multipart/form-data" class="upload-box">
+       <h3>Excel Datei hochladen</h3>
+        <input type="file" name="excel_file"  accept=".xlsx">
+        <input type="submit" value="Datei hochladen"  >
+    </form>
+</body>
     <form action="/konto_uebersicht" method='POST' >
     <a href="/logout" class="button">Logout</a>
     <a href="/profil_page" class="button">Profilseite</a>
@@ -16,16 +23,16 @@
     <a href="/ausfuehrung_export/{{ kontoid[0] }}" class="btn-primary">Excel herunterladen</a>
         <table>
           <tr>
-            <th>zeitstempel</th>
-            <th>betrag</th>
-            <th>name_empfaenger</th>
-            <th>verwendungszweck</th>
+            <th>Zeitstempel</th>
+            <th>Betrag</th>
+            <th>Empfänger</th>
+            <th>Verwendungszweck</th>
             <th>Kategorie</th>
           </tr>
             {% for konto in eintrag %}
           <tr>
             <td>{{ konto[0] }}</td>
-            <td>{{ konto[1] }}</td>
+            <td>{{ konto[1] }}€</td>
             <td>{{ konto[2] }}</td>
             <td>{{ konto[3] }}</td>
             <td>{{ konto[4] if konto[4] != None else 'Keine Kategorie zugewiesen'  }}</td>
@@ -35,9 +42,4 @@
     <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege={{ anzahl_eintraege + 15 }}" class="button">15 Weitere Einträge anzeigen</a>
     <a href="/konto_uebersicht/{{ name }}?anzahl_eintraege=-1" class="button">Alle Einträge zeigen</a>
     </form>
-   <form action="/upload_excel/{{ name }}/{{ kontoid[0] }}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="excel_file" accept=".xlsx">
-        <input type="submit" value="Datei hochladen">
-    </form>
-</body>
 </html>

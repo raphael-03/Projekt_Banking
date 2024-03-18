@@ -1,13 +1,17 @@
+/* Bestehende Stile */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
     min-height: 100vh;
+    box-sizing: border-box;
 }
+
 form {
     background-color: #ffffff;
     padding: 40px;
@@ -16,34 +20,10 @@ form {
     text-align: left;
 }
 
-.button-konto {
-    color: #4A90E2; /* Blau */
-    text-decoration: none;
-    padding: 0;
-    margin: 0;
-    display: block;
-}
-
 ul {
     list-style-type: none;
     padding: 0;
-    width: 100%;
-    max-width: 600px;
-    margin: 20px 0;
-}
 
-ul li a {
-    padding: 10px 0; /* Anpassen der Polsterung für Linksbündigkeit */
-    border-bottom: 1px solid #eee;
-    color: #4A90E2; /* Einheitliche blaue Farbe für die Links */
-}
-
-ul li:last-child a {
-    border-bottom: none;
-}
-
-ul li a:hover {
-    background-color: #f0f0f0;
 }
 
 .button, .button-neu {
@@ -66,3 +46,32 @@ ul li a:hover {
     margin: 10px auto;
 }
 
+/* Hinzugefügte oder angepasste Stile */
+.button-konto {
+    color: #4A90E2; /* Blau */
+    text-decoration: none;
+    padding: 10px;
+    margin: 10px;
+    display: block;
+}
+
+ul li a {
+    border-bottom: 1px solid #eee;
+    color: #4A90E2; /* Einheitliche blaue Farbe für die Links */
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Sanfte Übergänge */
+}
+
+ul li:last-child a {
+    border-bottom: none;
+}
+
+ul li a:hover {
+    background-color: #e0e0e0; /* Etwas dunklere Farbe beim Hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Verstärkter Schatten beim Hover */
+}

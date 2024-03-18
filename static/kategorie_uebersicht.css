@@ -20,7 +20,7 @@ form {
 }
 
 .button {
-    background-color: #8a2be2; /* Lila */
+    background-color: #8a2be2;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -38,12 +38,13 @@ form {
 }
 
 ul {
-    list-style-type: none; /* Entfernt die Listenpunkte */
+    list-style-type: none;
     padding: 0;
 }
 
 li {
-    background-color: #f0f0f0; /* Ein leichter Grauton für die Liste */
+    background-color: #f0f0f0;
+    text-align: center;
     margin: 10px 0;
     padding: 10px;
     border-radius: 5px;
