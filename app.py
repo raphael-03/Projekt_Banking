@@ -186,7 +186,7 @@ def upload_excel(name, kontoid):
         if file and allowed_file(file.filename):
             # Nur bestimmte Spalten aus der Excel-Datei lesen
             df = pd.read_excel(file, usecols=['Zeitstempel', 'Betrag', 'Empfaenger', 'Verwendungszweck'])
-            # Daten in die Datenbank einfügen
+
             insert_into_database(df,email, kontoid)
 
             flash('Datei erfolgreich hochgeladen und in die Datenbank eingefügt')
@@ -215,7 +215,6 @@ def visualisierung_konto_eintraege(email, kontoid):
     start_datum = request.args.get('start_datum')
     ende_datum = request.args.get('ende_datum')
 
-    # Rufe die Datenabfragefunktion mit den Parametern jahr und monat auf
     eintraege = sortieren_nach_kategorien(email, kontoid, jahr=jahr, monat=monat, start_datum=start_datum, ende_datum=ende_datum)
     kategorisierte_eintraege = {}
     gesamtsummen = {}
@@ -242,8 +241,6 @@ def visualisierung_konto_eintraege(email, kontoid):
     plt.savefig(img, format='png')
     img.seek(0)
     img_url = 'data:image/png;base64,' + base64.b64encode(img.getvalue()).decode('utf8')
-
-    # Visualisierung und kategorisierte Einträge an die Vorlage senden
     return render_template('visualisierung_konto_eintraege.html', kategorisierte_eintraege=kategorisierte_eintraege, email=email, img_url=img_url, kontoid=kontoid, name=name)
 
 if __name__ == '__main__':
