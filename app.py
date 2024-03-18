@@ -88,6 +88,7 @@ def profil_page():
     anzahl = True
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
+#Raphael
 @app.route('/konto_uebersicht/<name>', methods=['GET', 'POST'])
 def konto_uebersicht(name):
     email = session.get('email')
@@ -96,6 +97,7 @@ def konto_uebersicht(name):
     eintrag = letzten_kontoeintraege_zeigen(email, kontid, anzahl_eintraege)
     return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name, kontoid=kontid, anzahl_eintraege=anzahl_eintraege)
 
+#ahmet
 @app.route('/konto_anzeigen', methods=['GET', 'POST'])
 def kontos_anzeigen():
     email = session.get('email')
@@ -113,6 +115,7 @@ def konto_erstellen():
         return redirect(url_for('kontos_anzeigen', email=email))
     return render_template('create_konto.html')
 
+#ahmet
 @app.route('/konto_waehlen/<name>')
 def konto_waehlen(name):
     email = session.get('email')
