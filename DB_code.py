@@ -11,7 +11,6 @@ def get_db_connection():
     conn = psycopg2.connect(host=host, database=database, user=user, password=password)
     return conn
 
-
 def execute_sql(sql, values=None, fetch=False):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -26,7 +25,6 @@ def execute_sql(sql, values=None, fetch=False):
     finally:
         cur.close()
         conn.close()
-
 
 def register_user(vorname, nachname, email, alter, bankinstitut, password):
     user_exists = execute_sql("SELECT * FROM kunde WHERE email = %s", (email,), fetch=True)
