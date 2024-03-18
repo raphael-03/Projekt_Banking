@@ -5,10 +5,24 @@
     <title>visualisierung derkonto_einträge</title>
 </head>
 <body>
-    <form action="/visualisierung_konto_eintraege", method='POST'>
-           <h1>Kontoeinträge </h1>
-    <a href="/profil_page" class="button">Profil Übersicht</a>
-    {% for kategorie, eintraege in kategorisierte_eintraege.items() %}
+    <form action="{{ url_for('visualisierung_konto_eintraege', email=email, kontoid=kontoid) }}" method='POST'>
+        <h1>Kontoeinträge</h1>
+        <a href="/konto_uebersicht/{{ name }}" class="button">Konto Übersicht</a>
+        <label for="jahr">Jahr:</label>
+        <input type="number" id="jahr" name="jahr"  placeholder="YYYY" min="1900" max="2099">
+        <label for="monat">Monat:</label>
+        <input type="number" id="monat" name="monat"  min="1" max="12" placeholder="MM">
+        <label for="start_datum">Startdatum:</label>
+        <input type="date" id="start_datum" name="start_datum" placeholder="start_datum">
+        <label for="ende_datum">Enddatum:</label>
+        <input type="date" id="ende_datum" name="ende_datum" placeholder="ende_datum">
+        <input type="submit" value="Filtern">
+        {% if img_url %}
+        <div>
+            <img src="{{ img_url }}" alt="Kreisdiagramm der Kategoriesummen">
+        </div>
+        {% endif %}
+        {% for kategorie, eintraege in kategorisierte_eintraege.items() %}
         <h2>{{ kategorie }}</h2>
         <table>
             <tr>
@@ -20,14 +34,13 @@
             {% for eintrag in eintraege %}
             <tr>
                 <td>{{ eintrag[0] }}</td>
-                <td>{{ eintrag[1] }}</td>
+                <td>{{ eintrag[1] }}€</td>
                 <td>{{ eintrag[2] }}</td>
                 <td>{{ eintrag[3] }}</td>
             </tr>
             {% endfor %}
         </table>
-    {% endfor %}
-    <img src="{{ img_url }}" alt="Kreisdiagramm der Kategoriesummen">
+        {% endfor %}
     </form>
 </body>
 </html>

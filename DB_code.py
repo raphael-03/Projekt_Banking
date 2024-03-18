@@ -208,29 +208,50 @@ def insert_into_database(df, email, kontoid):
 
 #visualiserung der EInträge
 
-def sortieren_nach_kategorien(email, kontoid):
-    eintraege = execute_sql("SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, ke.Zeitstempel, ke.Betrag, ke.Name_Empfaenger, ke.Verwendungszweck FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s ORDER BY Kategorie, ke.Zeitstempel", (email, kontoid,), fetch=True)
+def sortieren_nach_kategorien(email, kontoid, jahr=None, monat=None, start_datum=None, ende_datum=None):
+    base_query = "SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, ke.Zeitstempel, ke.Betrag, ke.Name_Empfaenger, ke.Verwendungszweck FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s"
+    params = [email, kontoid]
+
+    if jahr and monat:
+        base_query += " AND EXTRACT(YEAR FROM ke.Zeitstempel) = %s AND EXTRACT(MONTH FROM ke.Zeitstempel) = %s"
+        params.extend([jahr, monat])
+    elif monat:
+        base_query += " AND EXTRACT(MONTH FROM ke.Zeitstempel) = %s"
+        params.append(monat)
+    elif jahr:
+        base_query += " AND EXTRACT(YEAR FROM ke.Zeitstempel) = %s"
+        params.append(jahr)
+    elif start_datum and ende_datum:
+        base_query += "AND zeitstempel BETWEEN %s AND %s "
+        params.extend([start_datum, ende_datum])
+
+    base_query += " ORDER BY Kategorie, ke.Zeitstempel"
+    eintraege = execute_sql(base_query, tuple(params), fetch=True)
     return eintraege
 
-def get_kategorie_summen(email, kontoid):
-    kategorie_summe = execute_sql(" SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, SUM(ke.Betrag) AS Gesamtsumme FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s GROUP BY Kategorie ORDER BY Gesamtsumme DESC", (email,kontoid,), fetch=True)
+
+def get_kategorie_summen(email, kontoid, jahr=None, monat=None, start_datum=None, ende_datum=None):
+    base_query = "SELECT COALESCE(k.name, 'Keine Kategorie') AS Kategorie, SUM(ke.Betrag) AS Gesamtsumme FROM Kontoeintrag ke LEFT JOIN kategorien k ON ke.kategorienid = k.kategorienid WHERE ke.email = %s AND ke.kontoid = %s"
+    params = [email, kontoid]
+
+    if jahr and monat:
+        base_query += " AND EXTRACT(YEAR FROM ke.Zeitstempel) = %s AND EXTRACT(MONTH FROM ke.Zeitstempel) = %s"
+        params.extend([jahr, monat])
+    elif monat:
+        base_query += " AND EXTRACT(MONTH FROM ke.Zeitstempel) = %s"
+        params.append(monat)
+    elif jahr:
+        base_query += " AND EXTRACT(YEAR FROM ke.Zeitstempel) = %s"
+        params.append(jahr)
+
+    elif start_datum and ende_datum:
+        base_query += "AND zeitstempel BETWEEN %s AND %s "
+        params.extend([start_datum, ende_datum])
+
+    base_query += " GROUP BY Kategorie ORDER BY Gesamtsumme DESC"
+    kategorie_summe = execute_sql(base_query, tuple(params), fetch=True)
     return kategorie_summe
 
-def get_zeitraum(zeitspanne, start_date, end_date, email, kontoid):
-    parameters = [email, kontoid]  # Parameter für die Abfrage
-    base_query = "SELECT * FROM kontoeintrag WHERE email = %s AND kontoid = %s "
-
-    if zeitspanne == 'monatlich':
-        # Monatliche Abfrage
-        query = base_query + "AND DATE_TRUNC('month', zeitstempel) = DATE_TRUNC('month', CURRENT_DATE)"
-    elif zeitspanne == 'jaehrlich':
-        # Jährliche Abfrage
-        query = base_query + "AND DATE_TRUNC('year', zeitstempel) = DATE_TRUNC('year', CURRENT_DATE)"
-    elif zeitspanne == 'benutzerdefiniert' and start_date and end_date:
-        # Benutzerdefinierte Zeitspanne
-        query = base_query + "AND zeitstempel BETWEEN %s AND %s"
-        parameters += [start_date, end_date]  # Hinzufügen der Start- und Enddaten zu den Parametern
-    else:
-        return "Ungültige Auswahl.", []
-
-    return query, parameters
+def finde_konto_name(email, kontoid):
+    konto_name = execute_sql("SELECT name FROM konto_anlegen WHERE email = %s AND kontoid = %s", (email,kontoid,), fetch=True)
+    return konto_name[0][0]

@@ -4,7 +4,7 @@ import hashlib, io
 import base64
 import pandas as pd
 from DB_code import register_user, login_user, logout_user, konto_anlegen, konto_anzeigen, create_kontoauszug_anlegen, finde_kontoid_durch_namen, letzten_kontoeintraege_zeigen,letzten_kontoeintraege_zeigen_5, pruefe_konto
-from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database, sortieren_nach_kategorien, get_zeitraum
+from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_name_email, ergebnis_suchfunktion, excel_export, insert_into_database, sortieren_nach_kategorien, finde_konto_name
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
@@ -199,7 +199,23 @@ def allowed_file(filename):
 #Kontoeinträge Visuell darstellen
 @app.route('/visualisierung_konto_eintraege/<email>/<kontoid>', methods=['GET', 'POST'])
 def visualisierung_konto_eintraege(email, kontoid):
-    eintraege = sortieren_nach_kategorien(email, kontoid)
+    name = finde_konto_name(email, kontoid)
+    if request.method == 'POST':
+        jahr = request.form.get('jahr')
+        monat = request.form.get('monat')
+        start_datum = request.form.get('start_datum')
+        ende_datum = request.form.get('ende_datum')
+        return redirect(
+            url_for('visualisierung_konto_eintraege', email=email, kontoid=kontoid, **request.args, jahr=jahr,
+                    monat=monat, start_datum=start_datum, ende_datum=ende_datum, name=name))
+
+    jahr = request.args.get('jahr')
+    monat = request.args.get('monat')
+    start_datum = request.args.get('start_datum')
+    ende_datum = request.args.get('ende_datum')
+
+    # Rufe die Datenabfragefunktion mit den Parametern jahr und monat auf
+    eintraege = sortieren_nach_kategorien(email, kontoid, jahr=jahr, monat=monat, start_datum=start_datum, ende_datum=ende_datum)
     kategorisierte_eintraege = {}
     gesamtsummen = {}
 
@@ -227,7 +243,7 @@ def visualisierung_konto_eintraege(email, kontoid):
     img_url = 'data:image/png;base64,' + base64.b64encode(img.getvalue()).decode('utf8')
 
     # Visualisierung und kategorisierte Einträge an die Vorlage senden
-    return render_template('visualisierung_konto_eintraege.html', kategorisierte_eintraege=kategorisierte_eintraege, email=email, img_url=img_url, kontoid=kontoid)
+    return render_template('visualisierung_konto_eintraege.html', kategorisierte_eintraege=kategorisierte_eintraege, email=email, img_url=img_url, kontoid=kontoid, name=name)
 def erstelle_kreisdiagramm(data):
     # Kategorienamen und ihre Gesamtsummen extrahieren
     kategorien, summen = zip(*data)
@@ -239,22 +255,6 @@ def erstelle_kreisdiagramm(data):
     plt.savefig(buf, format='png', bbox_inches='tight')
     buf.seek(0)
     return buf
-
-#sortieren nach monatlich, jahrlich, oder zu einer benutzerde nierten Zeitspanne
-@app.route('/suche_nach_zeitraum/<kontoid>', methods=['GET', 'POST'])
-def sortieren_zeitraum(kontoid):
-    email = session.get('email')
-    if request.method == 'POST':
-        zeitspanne = request.form.get('zeitspanne')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        email = request.form.get('email')
-        kontoid = request.form.get('kontoid')
-
-        query = get_zeitraum(zeitspanne, start_date, end_date, email, kontoid)
-        return render_template('suche_nach_zeitraum.html', query=query)
-    return render_template('suche_nach_zeitraum.html', email=email, kontoid=kontoid)
-
 
 if __name__ == '__main__':
     app.run()
