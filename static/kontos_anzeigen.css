@@ -8,8 +8,45 @@ body {
     align-items: center;
     min-height: 100vh;
 }
+form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
 
-.button, .button-konto {
+.button-konto {
+    color: #4A90E2; /* Blau */
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px 0;
+}
+
+ul li a {
+    padding: 10px 0; /* Anpassen der Polsterung für Linksbündigkeit */
+    border-bottom: 1px solid #eee;
+    color: #4A90E2; /* Einheitliche blaue Farbe für die Links */
+}
+
+ul li:last-child a {
+    border-bottom: none;
+}
+
+ul li a:hover {
+    background-color: #f0f0f0;
+}
+
+.button, .button-neu {
     background-color: #8a2be2; /* Lila */
     color: white;
     padding: 10px 15px;
@@ -21,58 +58,11 @@ body {
     border: none;
 }
 
-.button-konto {
-    background-color: #4A90E2; /* Blau */
-    color: white;
-}
-
-.button-konto:hover {
-    background-color: #357ABD; /* Dunkelblau */
-}
-
-.button:hover {
+.button:hover, .button-neu:hover {
     opacity: 0.9;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-    max-width: 600px;
-    margin: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    background-color: #ffffff; /* Weißer Hintergrund für die Box */
-}
-
-ul li a {
-    display: block;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    border-radius: 5px; /* Abgerundete Ecken für die Konten-Buttons */
-}
-
-ul li:last-child a {
-    border-bottom: none; /* Entfernt den unteren Rand vom letzten Element */
-}
-
-ul li a:hover {
-    background-color: #f0f0f0;
-}
-
-/* Konto erstellen Button wird nun auch Lila */
 .button-neu {
-    background-color: #8a2be2; /* Lila */
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    margin: 10px auto; /* Zentriert den Button */
-    width: auto;
+    margin: 10px auto;
 }
 
-.button-neu:hover {
-    background-color: #7b1fa2; /* Dunkleres Lila */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
