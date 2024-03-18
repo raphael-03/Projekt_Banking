@@ -8,16 +8,16 @@ from DB_code import kategorien_waehlen, kategorien_erstellen_2, finde_kontoid_na
 app = Flask(__name__)
 app.secret_key = 'AhmetundRaphael'
 
-# Benutzerregistrierung und -anmeldung
 @app.route('/', methods=['GET', 'POST'])
 def startseite():
     return render_template("startseite.html")
 
 # Erstellt einen SHA256 Hash des Passworts
+#Ahmet
 def hash_password(password):
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
     return hashed_password
-
+#Ahmet
 @app.route('/registrierung', methods=['GET', 'POST'])
 def registrierung():
     if request.method == 'POST':
@@ -45,6 +45,7 @@ def registrierung():
 
     return render_template('registrierung.html')
 
+#ahmet
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -67,6 +68,8 @@ def login():
         else:
             return render_template("login.html", error="Passwort ist falsch oder Benutzer existiert nicht", email=email)
     return render_template('login.html')
+
+#ahmet
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     print(session.get('email'))
@@ -76,6 +79,7 @@ def logout():
     return render_template('logout_page.html', vorname=vorname)
 
 #Dies ist hier die Übersicht nach dem Login
+#Raphael
 @app.route('/profil_page', methods=['GET', 'POST'])
 def profil_page():
     email = session.get('email')
@@ -99,6 +103,7 @@ def kontos_anzeigen():
     return render_template('kontos_anzeigen.html', konto_anzeige=konto_anzeige)
 
 # Funktion um ein Konto zu erstellen
+#ahmet
 @app.route('/konto_erstellen', methods=['GET','POST'])
 def konto_erstellen():
     if request.method == 'POST':
@@ -118,6 +123,7 @@ def konto_waehlen(name):
         return "Konto nicht gefunden", 404
 
 # Funtkion um ein Eintrag zu erstellen
+#Raphael
 @app.route('/kontoauszug_anlegen/<kontoid>/<name>', methods=[ 'GET','POST'])
 def kontoauszug_anlegen(kontoid, name):
     print(f"Route aufgerufen mit kontoid: {kontoid}")
@@ -132,6 +138,7 @@ def kontoauszug_anlegen(kontoid, name):
     return render_template('create_kontoeintrag.html', kontoid=kontoid, name=name)
 
 #Klassifikation von Kontoeintraegen
+#ahmet
 @app.route('/kategorien_anlegen/<email>', methods=[ 'GET','POST'])
 def kategorien_anlegen(email):
     if request.method == 'POST':
@@ -141,12 +148,14 @@ def kategorien_anlegen(email):
         return redirect(url_for('kategorien_uebersicht',email=email, schlagwoerter=schlagwoerter))
     return render_template('kategorien_anlegen.html', email=email)
 
+#ahmet
 @app.route('/kategorien_uebersicht/<email>', methods=[ 'GET','POST'])
 def kategorien_uebersicht(email):
     kategoriebezeichnung = kategorien_waehlen(email)
     return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
 
 #Suchfunktionen
+#Raphael
 @app.route('/suchfunktionen_formular/<kontoid>', methods=['GET', 'POST'])
 def suchfunktionen_formular(kontoid):
     print(f"kontoid: {kontoid}")
@@ -164,13 +173,16 @@ def suchfunktionen_formular(kontoid):
         return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid, suchfunktion_ausgabe=suchfunktion_ausgabe[0], ergebnis_summe=ergebnis_summe)
     return render_template('suchfunktionen_formular.html',email=email, kontoid=kontoid)
 
-@app.route('/ausfuehrung_export/<kontoid>', methods = ['GET', 'POST'])
+#export der einträge
+#Ahmet und Raphael
+@app.route('/ausfuehrung_export/<kontoid>', methods=['GET', 'POST'])
 def ausfuehrung_export(kontoid):
     email = session.get('email')
     excel_file = excel_export(email,kontoid)
     return Response(excel_file.getvalue(),mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition": f"attachment;filename=Kontoeintraege_{kontoid}.xlsx"})
 
 # import der excel datei
+#Ahmet und Raphael
 @app.route('/upload_excel/<name>/<kontoid>', methods=['GET', 'POST'])
 def upload_excel(name, kontoid):
     email = session.get('email')
@@ -194,10 +206,12 @@ def upload_excel(name, kontoid):
         else:
             return redirect(url_for('konto_uebersicht', name=name, kontoid=kontoid, email=email))
 
+#ahmet und Raphael
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xlsx'}
 
 #Kontoeinträge Visuell darstellen
+#Raphael
 @app.route('/visualisierung_konto_eintraege/<email>/<kontoid>', methods=['GET', 'POST'])
 def visualisierung_konto_eintraege(email, kontoid):
     name = finde_konto_name(email, kontoid)
