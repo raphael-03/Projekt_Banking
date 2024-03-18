@@ -9,7 +9,7 @@ body {
     min-height: 100vh;
 }
 
-h2 {
+h1, h2 {
     color: #8a2be2; /* Lila */
 }
 
@@ -19,7 +19,7 @@ h2 {
     padding: 10px 15px;
     border-radius: 5px;
     text-decoration: none;
-    margin: 10px 5px;
+    margin: 10px 0;
     display: inline-block;
 }
 
@@ -29,47 +29,15 @@ h2 {
 }
 
 form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
-}
-
-label {
-    display: block;
-    margin-top: 20px;
-}
-
-input[type="text"],
-input[type="datetime-local"],
-input[type="number"],
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #8a2be2; /* Lila */
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-button:hover {
-    background-color: #7b1fa2;
+    max-width: 800px;
+    text-align: center;
 }
 
 table {
     border-collapse: collapse;
     width: 100%;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
 th, td {
@@ -89,4 +57,10 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #ddd;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
 }

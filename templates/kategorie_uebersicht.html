@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Kategorie Übersicht</title>
+    <link rel="stylesheet" href="../static/kategorie_uebersicht.css">
 </head>
 <body>
     <form action="/kategorien_uebersicht/{{ email }}" method='POST'>
         <a href="/profil_page" class="button">Profilseite</a>
-        <a href="/kategorien_anlegen/{{ email }}" class="button">kategorie anlegen</a>
-
-        {% for kategorie in kategoriebezeichnung %}
-            <li>{{ kategorie[0] }}</li>
-        {% endfor %}
+        <a href="/kategorien_anlegen/{{ email }}" class="button">Kategorie anlegen</a>
+        <ul>
+            {% for kategorie in kategoriebezeichnung %}
+                <li>{{ kategorie[0] }}</li>
+            {% endfor %}
+        </ul>
     </form>
 </body>
 </html>

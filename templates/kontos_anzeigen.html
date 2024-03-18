@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Kontos anzeigen</title>
     <link rel="stylesheet" href="../static/kontos_anzeigen.css">
-
 </head>
 <body>
     <form action="/konto_anzeigen" method='POST'>
@@ -12,10 +11,10 @@
         <a href="/profil_page" class="button">Profilseite</a>
         <ul>
             {% for name in konto_anzeige %}
-                <li><a href="/konto_uebersicht/{{ name[0] }}">{{ name[0] }}</a></li>
-            {%  endfor %}
+                <li><a href="/konto_uebersicht/{{ name[0] }}" class="button-konto">{{ name[0] }}</a></li>
+            {% endfor %}
         </ul>
-    <a href="/konto_erstellen" class="button">Konto erstellen</a>
+        <a href="/konto_erstellen" class="button button-neu">Konto erstellen</a>
     </form>
 </body>
 </html>
