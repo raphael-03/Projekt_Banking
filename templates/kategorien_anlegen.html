@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Kategorien anlegen</title>
+    <link rel="stylesheet" href="../static/konto_uebersicht.css">
 </head>
 <body>
     <a href="/kategorien_uebersicht/{{ email }}" class="button">Kategorie Übersicht</a>
     <form action="/kategorien_anlegen/{{email}}" method='POST'>
-
-    <label for="k_name">Kategoriename:</label>
+        <label for="k_name">Kategoriename:</label>
         <input type="text" id="k_name" name="k_name" required>
 
         <label for="schlagwoerter">Schlagwörter (kommagetrennt):</label>
         <input type="text" id="schlagwoerter" name="schlagwoerter" placeholder="z.B. Supermarkt, Lebensmittel">
 
-        <button type="submit">Erstellen</button>
+        <button type="submit" class="btn-primary">Erstellen</button>
     </form>
 </body>
 </html>
+
