@@ -15,7 +15,6 @@ def startseite():
 
 # Erstellt einen SHA256 Hash des Passworts
 def hash_password(password):
-
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
     return hashed_password
 
@@ -31,7 +30,6 @@ def registrierung():
         password = request.form.get('password')
         password_repeat = request.form.get('password_repeat')
 
-        # Einfache Passwort-Validierung
         error = None
         if password != password_repeat:
             error = 'Passwörter stimmen nicht überein.'
@@ -84,7 +82,6 @@ def profil_page():
     eintrag = letzten_kontoeintraege_zeigen_5(email)
     konto_pruefen = pruefe_konto(email)
     anzahl = True
-
     return render_template('profil_page.html', eintrag=eintrag, konto_pruefen=konto_pruefen, email=email, anzahl=anzahl)
 
 @app.route('/konto_uebersicht/<name>', methods=['GET', 'POST'])
@@ -93,9 +90,7 @@ def konto_uebersicht(name):
     kontid = finde_kontoid_name_email(email, name)[0]
     anzahl_eintraege = request.args.get('anzahl_eintraege', default=15, type=int)
     eintrag = letzten_kontoeintraege_zeigen(email, kontid, anzahl_eintraege)
-
     return render_template('konto_uebersicht.html', email=email, eintrag=eintrag, name=name, kontoid=kontid, anzahl_eintraege=anzahl_eintraege)
-
 
 @app.route('/konto_anzeigen', methods=['GET', 'POST'])
 def kontos_anzeigen():
@@ -152,7 +147,6 @@ def kategorien_uebersicht(email):
     return render_template('kategorie_uebersicht.html', kategoriebezeichnung=kategoriebezeichnung, email=email)
 
 #Suchfunktionen
-
 @app.route('/suchfunktionen_formular/<kontoid>', methods=['GET', 'POST'])
 def suchfunktionen_formular(kontoid):
     print(f"kontoid: {kontoid}")
@@ -201,7 +195,6 @@ def upload_excel(name, kontoid):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xlsx'}
-
 
 #Kontoeinträge Visuell darstellen
 @app.route('/visualisierung_konto_eintraege/<email>/<kontoid>', methods=['GET', 'POST'])
