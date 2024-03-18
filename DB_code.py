@@ -203,9 +203,7 @@ def insert_into_database(df, email, kontoid):
                 "INSERT INTO kontoeintrag (Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, email, kategorienid, kontoid) VALUES (%s, %s, %s, %s, %s, NULL, %s)",
                 (row['Zeitstempel'], row['Betrag'], row['Empfaenger'], row['Verwendungszweck'], email, kontoid,))
 
-        ergebnisse.append(ergebnis)  # Ergebnis der Operation speichern
-
-    # Hier könnten Sie ergebnisse zurückgeben oder verarbeiten, falls nötig
+        ergebnisse.append(ergebnis)
     return ergebnisse
 
 #visualiserung der EInträge
