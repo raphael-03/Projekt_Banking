@@ -217,7 +217,7 @@ def visualisierung_konto_eintraege(email, kontoid):
             kategorisierte_eintraege[kategorie] = []
             gesamtsummen[kategorie] = 0
         kategorisierte_eintraege[kategorie].append(eintrag[1:])
-        gesamtsummen[kategorie] += eintrag[2]  # Angenommen, das Betragsfeld ist das dritte in jedem Eintrag
+        gesamtsummen[kategorie] += eintrag[2]
 
     # Kreisdiagramm für Kategoriesummen erstellen
     labels = gesamtsummen.keys()

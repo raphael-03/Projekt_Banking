@@ -48,18 +48,10 @@ def register_user(vorname, nachname, email, alter, bankinstitut, password):
 
 def login_user(email):
     return execute_sql(
-        "SELECT email, password FROM password WHERE email = %s;",
-        (email,),
-        fetch=True
-    )
+        "SELECT email, password FROM password WHERE email = %s;",(email,),fetch=True)
 def logout_user(email):
     return execute_sql(
-        "SELECT vorname FROM kunde WHERE email = %s",
-        (email,),
-        fetch=True
-    )
-
-
+        "SELECT vorname FROM kunde WHERE email = %s",(email,),fetch=True)
 def konto_anlegen(name, email):
     return execute_sql(
         "INSERT INTO konto_anlegen (name, email) VALUES (%s,%s)",
@@ -101,7 +93,7 @@ def finde_kontoid_name_email(email, name):
     kontid = execute_sql(" SELECT kontoid FROM konto_anlegen WHERE email=%s AND name =%s", (email, name), fetch=True)
     return kontid
 def letzten_kontoeintraege_zeigen_5(email):
-    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s ORDER BY zeitstempel LIMIT 5", (email,), fetch=True)
+    eintrag =execute_sql("SELECT Zeitstempel, Betrag, Name_Empfaenger, Verwendungszweck, kategorien.name FROM kontoeintrag  LEFT JOIN kategorien  ON kontoeintrag.kategorienid = kategorien.kategorienid WHERE kontoeintrag.email = %s ORDER BY zeitstempel DESC LIMIT 5", (email,), fetch=True)
     return eintrag
 
 def kategorien_erstellen(email, name):
